@@ -1,0 +1,94 @@
+*{
+    padding: 0%;
+    margin: 0%;
+}
+:root{
+    ---cor-principal:#dddd;
+}
+body{
+    background-color: var(---cor-principal);
+}
+header{
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    background-color: var(---cor-principal);
+    width: 100vw;
+    height: 20vh;
+}
+header h1{
+    color: white;
+    font-size: 300%;
+    padding: 3%;
+    
+}
+
+.container {
+    display: flex;
+    align-items: end;
+    justify-content: end;
+    width: 100vw; 
+    height: 100vh; 
+  }
+#red{
+    position: fixed;
+    justify-content: center;
+    width: 100.625em;
+    height: 57.25em;
+    left: 70%;
+    bottom: 40%;
+    border-radius: 100% ;
+    background-color: red;
+    z-index: 1;
+}
+
+.cat {
+    position: fixed;
+    right: 0;
+    bottom: 30%; 
+    height: 30em;
+    z-index: 2;
+}
+main{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: start; 
+    align-items: center;
+}
+main h1{
+    font-size: 3em;
+}
+.container1 {
+    padding: 0 0 0 100px ;
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+}
+
+.container1 img {
+    height: 6.25em;
+}
+
+.containerp{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    text-align: left;
+    flex-direction: column;
+    padding: 0 0 12.5em 0;
+    
+    
+}
+.containerp p{
+    font-size: 1,25em;
+}
+
+#entrar{
+    margin-top: 20em; 
+    padding: 15px 50px;
+    border-radius: 10px;
+    border: none;
+    background: rgb(255,0,0);
+    background: linear-gradient(180deg, rgba(255,0,0,1) 35%, rgba(255,255,255,1) 100%);
+}
