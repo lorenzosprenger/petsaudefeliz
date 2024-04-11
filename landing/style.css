@@ -35,22 +35,14 @@ header h1{
 #red{
     position: fixed;
     justify-content: center;
-    width: 100.625em;
-    height: 57.25em;
-    left: 70%;
+    width: 100em;
+    height: 100em;
+    left: 60%;
     bottom: 40%;
     border-radius: 100% ;
     background-color: red;
-    z-index: 1;
 }
 
-.cat {
-    position: fixed;
-    right: 0;
-    bottom: 30%; 
-    height: 30em;
-    z-index: 2;
-}
 main{
     width: 100vw;
     height: 100vh;
