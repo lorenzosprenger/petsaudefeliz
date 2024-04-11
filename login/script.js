@@ -1,24 +1,8 @@
-const mysql = require('mysql2');
+const togglePassword = document.getElementById('togglePassword');
+const password = document.getElementById('password');
 
-const dbHost = "localhost";
-const dbUsername = "root";
-const dbPassword = "Saolucas2006";
-const dbName = "petsaudefeliz";
-
-const conexao = mysql.createConnection({
-  host: dbHost,
-  user: dbUsername,
-  password: dbPassword,
-  database: dbName
+togglePassword.addEventListener('click', function() {
+    const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+    password.setAttribute('type', type);
+    this.classList.toggle('fa-eye-slash');
 });
-
-// Conectar ao banco de dados
-conexao.connect((err) => {
-  if (err) {
-    console.error('Erro ao conectar ao banco de dados:', err);
-    return;
-  }
-  console.log('Conexão bem-sucedida ao banco de dados!');
-});
-
-// Você pode usar a conexão para executar consultas, etc.
