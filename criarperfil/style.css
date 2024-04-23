@@ -1,0 +1,99 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+
+:root{
+    ---cor-principal:#dddd;
+}
+
+body{
+    width: 100vw;
+    height: 100vh;
+    background-color: var(---cor-principal);
+}
+
+header{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+header div{
+    display: flex;
+    align-items: center;
+    
+}
+
+header p{
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-left: 1rem;
+}
+
+
+.logo{
+    width: 10vw;
+}
+
+.PETSAUDEFELIZ{
+    width: 8vw;
+    padding: 20px;
+}
+
+
+main {
+    display: flex;
+    
+}
+main h1{
+    font-size: 6em;
+    font-weight: 500;
+    padding-left: 2%;
+    padding-bottom: 1%;
+}
+
+main p{
+    padding-left: 4%;
+    font-size: 1.5em;
+    font-weight: 100;
+}
+
+.organizar{
+    display: flex;
+    flex-direction: column;
+}
+
+.container{
+    flex-direction: column;
+    align-items: start;
+    
+}
+
+.ferradura{
+    width: 20vw;
+}
+
+.container2{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    padding-top: 3%;
+}
+main button{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 10vw;
+    height: 5vh;
+    border-radius: 10px;
+    border: none;
+    background-color: #FFFCFC;
+    cursor: pointer;
+}
+
+button a{
+    text-decoration: none;
+    color: rgb(0, 0, 0);
+}

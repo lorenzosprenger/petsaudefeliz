@@ -103,5 +103,5 @@ footer{
 footer div{
     display: flex;
     flex-direction: row;
-    gap: 40%;
+    justify-content: space-between;
 }
