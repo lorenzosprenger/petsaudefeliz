@@ -8,7 +8,7 @@ button.onclick = async function (e) {
     let email = document.getElementById('email').value;
     let senha = document.getElementById('senha').value;
 
-    
+
     let data = { name, email, senha }
 
     // POST
@@ -20,21 +20,22 @@ button.onclick = async function (e) {
 
     let content = await response.json();
     console.log(content);
-    
+
     if (content.success) {
         Swal.fire({
             icon: "success",
-            title: "Login realizado com sucesso!",
+            title: "Cadastro realizado com sucesso!",
             showConfirmButton: false,
             timer: 1500
-          });
+        });
 
     } else {
         Swal.fire({
             icon: "error",
             title: "Oops...",
             text: "Conta já registrada!",
-            confirmButtonClass:"button_alert"
-          });
+            showConfirmButton: false,
+            timer: 1500
+        });
     };
 };

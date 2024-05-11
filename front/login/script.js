@@ -7,7 +7,7 @@ button.onclick = async function (e) {
     let name = document.getElementById('name').value;
     let senha = document.getElementById('senha').value;
 
-    
+
     let data = { name, senha }
 
     // POST
@@ -18,29 +18,28 @@ button.onclick = async function (e) {
 
     let content = await response.json();
     console.log(content);
-    
+
     for (let i = 0; i < content.data.length; i++) {
 
-        if(content.data[i].name === name && content.data[i].senha === senha) {
+        if (content.data[i].name === name && content.data[i].senha === senha) {
             Swal.fire({
                 icon: "success",
-                title: "Cadastro realizado com sucesso!",
+                title: "Login realizado com sucesso!",
                 showConfirmButton: false,
                 timer: 1500
-              });
-              setTimeout(() => {
+            });
+            setTimeout(() => {
                 // window.location.href = "/front/saibamais/index.html"
-              }, 1500);
-           
-        }else {
+            }, 1500);
+
+        } else {
             Swal.fire({
                 icon: "error",
                 title: "Oops...",
                 text: "Conta não encontrada!",
-              });
-            
+                showConfirmButton: false,
+                timer: 1500
+            });
         }
     }
-
-} 
-
+}
