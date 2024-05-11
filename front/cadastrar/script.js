@@ -21,13 +21,20 @@ button.onclick = async function (e) {
     let content = await response.json();
     console.log(content);
     
-    if (content.sucess) {
-        alert ("Sucesso com o POST!!");
-        // window.location.reload();
-        //recarrega a página
+    if (content.success) {
+        Swal.fire({
+            icon: "success",
+            title: "Login realizado com sucesso!",
+            showConfirmButton: false,
+            timer: 1500
+          });
 
     } else {
-        console.error()
-        alert("Não deu o POST!!");
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Conta já registrada!",
+            confirmButtonClass:"button_alert"
+          });
     };
 };

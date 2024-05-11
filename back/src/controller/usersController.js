@@ -18,7 +18,7 @@ const connection = require('../config/db');
 // Função que retorna todos usuários no banco de dados
 async function listUsers(request, response) {
     // Preparar o comando de execução no banco
-    connection.query('SELECT * FROM usuarios', (err, results) => { 
+    connection.query('SELECT name, senha FROM usuarios', (err, results) => { 
         try {  // Tenta retornar as solicitações requisitadas
             if (results) {  // Se tiver conteúdo 
                 response.status(200).json({
