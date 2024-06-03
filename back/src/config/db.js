@@ -10,7 +10,7 @@ const dotenv = require('dotenv').config();
 // Estabelece a criação da conexão com banco 
 const connection = mysql.createConnection({
     host: process.env.HOST,
-    user: process.env.USER,
+    user: "root",
     password: process.env.PASSWORD,
     database: process.env.DATABASE,
 });

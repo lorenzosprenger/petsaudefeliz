@@ -38,4 +38,7 @@ button.onclick = async function (e) {
             timer: 1500
         });
     };
+    setTimeout(() => {
+        window.location.href = "/front/cadastrarpet/index.html";
+    }, 1500);
 };
