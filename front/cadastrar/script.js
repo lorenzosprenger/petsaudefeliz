@@ -1,13 +1,12 @@
-let button = document.querySelector('button');
+let button = document.getElementById('botao_cadastrar');
 
 button.onclick = async function (e) {
     e.preventDefault();
     //cancela o comportamento padrão de um formulario, tem que colocar o "e" no parametro
-
+    
     let name = document.getElementById('name').value;
     let email = document.getElementById('email').value;
     let senha = document.getElementById('senha').value;
-
 
     let data = { name, email, senha }
 
@@ -38,7 +37,7 @@ button.onclick = async function (e) {
             timer: 1500
         });
     };
-    setTimeout(() => {
-        window.location.href = "/front/cadastrarpet/index.html";
-    }, 1500);
+    // setTimeout(() => {
+    //     window.location.href = "/front/cadastrarpet/index.html";
+    // }, 1500);
 };
