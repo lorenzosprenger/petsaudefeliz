@@ -2,16 +2,26 @@ let button = document.getElementById('botao_cadastrar');
 
 button.onclick = async function (e) {
     e.preventDefault();
-    //cancela o comportamento padrão de um formulario, tem que colocar o "e" no parametro
+
+    
     
     let name = document.getElementById('name').value;
     let email = document.getElementById('email').value;
     let senha = document.getElementById('senha').value;
-
+    if (!name || !email || !senha) {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Por favor, preencha todos os campos.",
+                showConfirmButton: false,
+                timer: 1500
+            });
+            return;
+        }
     let data = { name, email, senha }
 
     // POST
-    const response = await fetch('http://localhost:3000/api/users', {
+    const response = await fetch('http://localhost:3000/api/users/usuario', {
         method: "POST",
         headers: { "Content-type": "application/json;charset=UTF-8" },
         body: JSON.stringify(data)
@@ -27,7 +37,9 @@ button.onclick = async function (e) {
             showConfirmButton: false,
             timer: 1500
         });
-
+        setTimeout(() => {
+            window.location.href = "/front/login/index.html";
+        }, 1500);
     } else {
         Swal.fire({
             icon: "error",
@@ -37,7 +49,5 @@ button.onclick = async function (e) {
             timer: 1500
         });
     };
-    // setTimeout(() => {
-    //     window.location.href = "/front/cadastrarpet/index.html";
-    // }, 1500);
+    
 };

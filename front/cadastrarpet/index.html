@@ -16,13 +16,13 @@
             <h1>Criar perfil do PET</h1>
             
             <div class="input-container">
-                <input type="text" placeholder="Nome" id="username"/>
+                <input type="text" placeholder="Nome" id="nome" required/>
             </div>
             <div class="input-container">
-                <input type="text" placeholder="Raça" id="username"/>
+                <input type="text" placeholder="Raça" id="raca" required/>
             </div>
             <div class="input-container">
-                <input type="date" placeholder="Data de nascimento" id="username"/>
+                <input type="date" placeholder="Data de nascimento" id="data_nasc" required/>
             </div>
             <div class="input-container">
                 <select id="genero" name="Gênero">
@@ -31,21 +31,23 @@
                 </select>
             </div>
             <div class="input-container">
-                <input type="number" placeholder="Peso" id="username"/>
+                <input type="number" placeholder="Peso (Kg)" id="peso" required/>
             </div>
             <div class="input-container">
-                <div id="teste" class="dropdown-trigger">Nível de atividade <select name="nivelAtividade" id=""><option value="baixo">Baixo</option>
+                <div id="teste" class="dropdown-trigger">Nível de atividade <select name="nivelAtividade" id="nivel_atv"><option value="baixo">Baixo</option>
                     <option value="médio">Médio</option>
                     <option value="alto">Alto</option></select>
                 </div>
 
             </div>
 
-            <button type="submit">Criar</button>
-
+            <button id="criar" type="submit">Criar</button>
+            <a id="possuiconta" href="/front/conteudoeducacional/index.html">Já tenho perfil do pet</a>
         </div>
+        
     </main>
     <script type="module" src="script.js"></script>
-    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </body>
 </html>

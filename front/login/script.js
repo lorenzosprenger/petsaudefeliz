@@ -10,7 +10,7 @@ button.onclick = async function (e) {
 
     let data = { name, senha }
 
-    // POST
+    // GET
     const response = await fetch('http://localhost:3000/api/users/listUsers', {
         method: "GET",
         headers: { "Content-type": "application/json;charset=UTF-8" }
@@ -20,8 +20,9 @@ button.onclick = async function (e) {
     console.log(content);
 
     for (let i = 0; i < content.data.length; i++) {
-
+        console.log(content.data[i].name === name && content.data[i].senha === senha);
         if (content.data[i].name === name && content.data[i].senha === senha) {
+            localStorage.setItem("idUsuario",content.data[i].id);
             Swal.fire({
                 icon: "success",
                 title: "Login realizado com sucesso!",
@@ -29,9 +30,9 @@ button.onclick = async function (e) {
                 timer: 1500
             });
             setTimeout(() => {
-                // window.location.href = "/front/saibamais/index.html"
+                window.location.href = "/front/saibamais/index.html"
             }, 1500);
-
+            break
         } else {
             Swal.fire({
                 icon: "error",
