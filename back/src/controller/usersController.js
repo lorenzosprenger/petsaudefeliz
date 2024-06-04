@@ -18,7 +18,7 @@ const connection = require('../config/db');
 // Função que retorna todos usuários no banco de dados
 async function listUsers(request, response) {
     // Preparar o comando de execução no banco
-    connection.query('SELECT name, senha FROM usuarios', (err, results) => { 
+    connection.query('SELECT id, name, senha FROM usuarios', (err, results) => { 
         try {  // Tenta retornar as solicitações requisitadas
             if (results) {  // Se tiver conteúdo 
                 response.status(200).json({
@@ -48,7 +48,7 @@ async function listUsers(request, response) {
 }
 
 // Função que cria um novo usuário 
-async function storeUser(request, response) {
+async function cadastroUsuario(request, response) {
     // Preparar o comando de execução no banco
     const query = 'INSERT INTO usuarios(name, email, senha) VALUES(?, ?, ?);';
 
@@ -57,6 +57,55 @@ async function storeUser(request, response) {
         request.body.name,
         request.body.email,
         request.body.senha
+        
+    );
+
+    // Executa a ação no banco e valida os retornos para o client que realizou a solicitação
+    connection.query(query, params, (err, results) => {
+        try {
+            if (results) {
+                response
+                    .status(201)
+                    .json({
+                        success: true,
+                        message: `Sucesso! Usuário cadastrado.`,
+                        data: results
+                    });
+            } else {
+                response
+                    .status(400)
+                    .json({
+                        success: false,
+                        message: `Não foi possível realizar o cadastro. Verifique os dados informados`,
+                        query: err.sql,
+                        sqlMessage: err.sqlMessage
+                    });
+            }
+        } catch (e) { // Caso aconteça algum erro na execução
+            response.status(400).json({
+                    succes: false,
+                    message: "Ocorreu um erro. Não foi possível cadastrar usuário!",
+                    query: err.sql,
+                    sqlMessage: err.sqlMessage
+                });
+        }
+    });
+}
+
+// Função que cria um novo pet 
+async function cadastroPet(request, response) {
+    // Preparar o comando de execução no banco
+    const query = 'INSERT INTO pet(idPet, nome, raca, data_nasc, genero, peso, nivel_atv) VALUES(?, ?, ?, ?, ?, ?, ?);';
+
+    // Recuperar os dados enviados na requisição
+    const params = Array(
+        request.body.idPet,
+        request.body.nome,
+        request.body.raca,
+        request.body.data_nasc,
+        request.body.genero,
+        request.body.peso,
+        request.body.nivel_atv
     );
 
     // Executa a ação no banco e valida os retornos para o client que realizou a solicitação
@@ -180,7 +229,8 @@ async function deleteUser(request, response) {
 
 module.exports = {
     listUsers,
-    storeUser,
+    cadastroPet,
+    cadastroUsuario,
     updateUser,
     deleteUser
 }

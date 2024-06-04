@@ -13,14 +13,16 @@ const router = Router();
 // Importar as funções (processamento da requisição) do controller
 const { 
     listUsers,
-    storeUser,
+    cadastroPet,
+    cadastroUsuario,
     updateUser,
     deleteUser
 } = require('../controller/usersController')
 
 // Criar os endpoints (rotas) que serão acessados a partir dos métodos HTTP (get,post,put,delete)
 router.get('/users/listUsers', listUsers);
-router.post('/users', storeUser);
+router.post('/users/pet', cadastroPet);
+router.post('/users/usuario', cadastroUsuario);
 router.put('/user/:id', updateUser);
 router.delete('/user/:id', deleteUser);
 
