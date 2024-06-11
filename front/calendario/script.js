@@ -112,20 +112,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 let data = { data_evento };
 
                 // POST
-                const response = await fetch('http://localhost:3000/api/users/calendario', {
+            const response = await fetch('http://localhost:3000/api/users/calendario', {
                     method: "POST",
                     headers: { "Content-type": "application/json;charset=UTF-8" },
                     body: JSON.stringify(data)
                 });
 
-                let content = await response.json();
+            let content = await response.json();
                 console.log(content);
                 
-                if (content.success) {
+            if (content.success) {
                     alert("Sucesso com o POST!!");
                     // window.location.reload();
                     //recarrega a página
-                } else {
+            } else {
                     console.error();
                     alert("Não deu o POST!!");
                 }
