@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
     const calendar = document.getElementById('calendar');
-    const eventForm = document.getElementById('event-form');
     const eventInput = document.getElementById('event-input');
     const dataAtual = new Date();
     let mesAtual = dataAtual.getMonth();
@@ -81,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const diasCalendario = document.querySelectorAll('.calendar-day');
         diasCalendario.forEach(dia => {
             dia.addEventListener('click', () => {
-                const diaSelecionado = dia.getAttribute('data-dia');
+                const diaSelecionado = dia.getAttribute('data-day');
                 const mesSelecionado = mesAtual + 1; // Janeiro é 0 no JavaScript
                 const anoSelecionado = anoAtual;
                 const dataSelecionada = `${anoSelecionado}-${mesSelecionado}-${diaSelecionado}`;
@@ -103,15 +102,14 @@ document.addEventListener('DOMContentLoaded', () => {
     botao_adicionar.addEventListener('click', () => {
         const diaSelecionado = document.querySelector('.calendar-day.selected');
         if (diaSelecionado) {
-            const diaSelecionado = 21;
+            const diaSelecionadoValue = diaSelecionado.getAttribute('data-day');
             const mesSelecionado = mesAtual + 1; // Janeiro é 0 no JavaScript
             const anoSelecionado = anoAtual;
-            const dataSelecionada = `${anoSelecionado}-${mesSelecionado}-${diaSelecionado.textContent}`;
+            const dataSelecionada = `${anoSelecionado}-${mesSelecionado}-${diaSelecionadoValue}`;
             const textoEvento = eventInput.value.trim();
 
             async function enviarEvento(data_evento) {
-                
-                let data = { data_evento }
+                let data = { data_evento };
 
                 // POST
                 const response = await fetch('http://localhost:3000/api/users/calendario', {
@@ -123,16 +121,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 let content = await response.json();
                 console.log(content);
                 
-                if (content.sucess) {
-                    alert ("Sucesso com o POST!!");
+                if (content.success) {
+                    alert("Sucesso com o POST!!");
                     // window.location.reload();
                     //recarrega a página
-
                 } else {
-                    console.error()
+                    console.error();
                     alert("Não deu o POST!!");
-                };
-            };
+                }
+            }
 
             enviarEvento(dataSelecionada);
 
@@ -145,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 alert('Por favor, digite um evento antes de adicionar.');
             }
-        }else {
+        } else {
             alert('Por favor, selecione um dia do calendário antes de adicionar um evento.');
         }
     });
