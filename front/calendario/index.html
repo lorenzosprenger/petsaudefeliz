@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PETSAUDEFELIZ</title>
-    <link rel="shortcut icon" href="/assets/logoPETSAUDEFELIZ.png" type="image/x-icon">
+    <link rel="shortcut icon" href="/front/assets/logoPETSAUDEFELIZ.png" type="image/x-icon">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -16,8 +16,6 @@
             <div class="icon-funcional">
                 <div class="icon">
                     <a href="/front/conteudoeducacional/index.html"><img src="/front/assets/educacional.png" alt=""></a>
-                    
-
                 </div>
                 <div class="icon">
                     <a href="/front/nutricao/index.html"><img src="/front/assets/nutriçao.png" alt=""></a>
@@ -27,12 +25,20 @@
                 </div>
                 <div class="icon ativa">
                     <a href="/front/calendario/index.html"><img src="/front/assets/calendario.png" alt=""></a>
-                    <div class="background"></div> 
+                    <div class="background"></div>
                 </div>
             </div>
         </div>
     </header>
-    <main>
+    <main id="calendar-container">
+        <div id="calendar"></div>
+        <div id="event-form">
+            <input type="text" id="event-input" placeholder="Digite seu evento">
+            <button id="add-event">Adicionar Evento</button>
+        </div>
     </main>
+    
+    
+    <script src="script.js"></script>
 </body>
 </html>

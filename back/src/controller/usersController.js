@@ -92,6 +92,48 @@ async function cadastroUsuario(request, response) {
     });
 }
 
+async function eventoCalendario(request, response) {
+    // Preparar o comando de execução no banco
+    // const query = 'INSERT INTO eventos(nome_usuario, lembrete, dia) VALUES(?, ?, ?);';
+    const query = 'INSERT INTO eventos(dia) VALUES (?)';
+
+    // Recuperar os dados enviados na requisição
+    const params = Array(
+        request.body.dataSelecionada
+    );
+
+    // Executa a ação no banco e valida os retornos para o client que realizou a solicitação
+    connection.query(query, params, (err, results) => {
+        try {
+            if (results) {
+                response
+                    .status(201)
+                    .json({
+                        success: true,
+                        message: `Sucesso! Evento cadastrado.`,
+                        data: results
+                    });
+            } else {
+                response
+                    .status(400)
+                    .json({
+                        success: false,
+                        message: `Não foi possível realizar o cadastro do Evento. Verifique os dados informados`,
+                        query: err.sql,
+                        sqlMessage: err.sqlMessage
+                    });
+            }
+        } catch (e) { // Caso aconteça algum erro na execução
+            response.status(400).json({
+                    succes: false,
+                    message: "Ocorreu um erro. Não foi possível cadastrar o Evento!",
+                    query: err.sql,
+                    sqlMessage: err.sqlMessage
+                });
+        }
+    });
+}
+
 // Função que cria um novo pet 
 async function cadastroPet(request, response) {
     // Preparar o comando de execução no banco
@@ -231,6 +273,7 @@ module.exports = {
     listUsers,
     cadastroPet,
     cadastroUsuario,
+    eventoCalendario,
     updateUser,
     deleteUser
 }

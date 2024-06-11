@@ -16,13 +16,15 @@ const {
     cadastroPet,
     cadastroUsuario,
     updateUser,
-    deleteUser
+    deleteUser,
+    eventoCalendario
 } = require('../controller/usersController')
 
 // Criar os endpoints (rotas) que serão acessados a partir dos métodos HTTP (get,post,put,delete)
 router.get('/users/listUsers', listUsers);
 router.post('/users/pet', cadastroPet);
 router.post('/users/usuario', cadastroUsuario);
+router.post('/users/calendario', eventoCalendario);
 router.put('/user/:id', updateUser);
 router.delete('/user/:id', deleteUser);
 
