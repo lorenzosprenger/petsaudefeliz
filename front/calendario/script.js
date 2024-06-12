@@ -1,9 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
     const calendar = document.getElementById('calendar');
     const eventInput = document.getElementById('event-input');
+    const addEventButton = document.getElementById('add-event');
     const dataAtual = new Date();
     let mesAtual = dataAtual.getMonth();
     let anoAtual = dataAtual.getFullYear();
+
+    // Supondo que o nome do usuário esteja armazenado em uma variável chamada nome_usuario
+    const nomeUsuario = localStorage.getItem("nomeUsuario"); // Você pode substituir isso pela forma como você obtém o nome do usuário
 
     renderizarCalendario();
 
@@ -80,26 +84,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const diasCalendario = document.querySelectorAll('.calendar-day');
         diasCalendario.forEach(dia => {
             dia.addEventListener('click', () => {
-                const diaSelecionado = dia.getAttribute('data-day');
-                const mesSelecionado = mesAtual + 1; // Janeiro é 0 no JavaScript
-                const anoSelecionado = anoAtual;
-                const dataSelecionada = `${anoSelecionado}-${mesSelecionado}-${diaSelecionado}`;
-                const textoEvento = eventInput.value.trim();
-                if (textoEvento !== '') {
-                    // Aqui você pode salvar o evento como preferir, como em um banco de dados ou localStorage
-                    alert(`Evento "${textoEvento}" adicionado em ${dataSelecionada}`);
-                    eventInput.value = ''; // Limpa o campo de texto após adicionar o evento
-                } else {
-                    alert('Por favor, digite um evento antes de adicionar.');
-                }
+                diasCalendario.forEach(d => d.classList.remove('selected'));
+                dia.classList.add('selected');
             });
         });
     }
 
-    const botao_adicionar = document.getElementById('add-event');
-
     // Adiciona evento ao clicar em "Adicionar Evento"
-    botao_adicionar.addEventListener('click', () => {
+    addEventButton.addEventListener('click', () => {
         const diaSelecionado = document.querySelector('.calendar-day.selected');
         if (diaSelecionado) {
             const diaSelecionadoValue = diaSelecionado.getAttribute('data-day');
@@ -107,38 +99,32 @@ document.addEventListener('DOMContentLoaded', () => {
             const anoSelecionado = anoAtual;
             const dataSelecionada = `${anoSelecionado}-${mesSelecionado}-${diaSelecionadoValue}`;
             const textoEvento = eventInput.value.trim();
-
-            async function enviarEvento(data_evento) {
-                let data = { data_evento };
-
+            async function enviarEvento( nomeUsuario, textoEvento, dataSelecionada) {
+                let data = { nome_usuario: nomeUsuario , texto_evento: textoEvento, data_evento: dataSelecionada};
+                console.log(data);
                 // POST
-            const response = await fetch('http://localhost:3000/api/users/calendario', {
+                const response = await fetch('http://localhost:3000/api/users/calendario', {
                     method: "POST",
                     headers: { "Content-type": "application/json;charset=UTF-8" },
                     body: JSON.stringify(data)
                 });
 
-            let content = await response.json();
+                let content = await response.json();
                 console.log(content);
-                
-            if (content.success) {
+
+                if (content.success) {
                     alert("Sucesso com o POST!!");
                     // window.location.reload();
-                    //recarrega a página
-            } else {
-                    console.error();
+                } else {
+                    console.error(content);
                     alert("Não deu o POST!!");
                 }
             }
 
-            enviarEvento(dataSelecionada);
-
             if (textoEvento !== '') {
-                // Aqui você pode salvar o evento como preferir, como em um banco de dados ou localStorage
+                enviarEvento(nomeUsuario, textoEvento, dataSelecionada  );
                 alert(`Evento "${textoEvento}" adicionado em ${dataSelecionada}`);
-                
-                // Limpa o campo de texto após adicionar o evento
-                // eventInput.value = '';   
+                eventInput.value = ''; // Limpa o campo de texto após adicionar o evento
             } else {
                 alert('Por favor, digite um evento antes de adicionar.');
             }

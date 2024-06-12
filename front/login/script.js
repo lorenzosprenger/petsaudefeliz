@@ -7,7 +7,6 @@ button.onclick = async function (e) {
     let name = document.getElementById('name').value;
     let senha = document.getElementById('senha').value;
 
-
     let data = { name, senha }
 
     // GET
@@ -23,6 +22,7 @@ button.onclick = async function (e) {
         console.log(content.data[i].name === name && content.data[i].senha === senha);
         if (content.data[i].name === name && content.data[i].senha === senha) {
             localStorage.setItem("idUsuario",content.data[i].id);
+            localStorage.setItem("nomeUsuario",content.data[i].name);
             Swal.fire({
                 icon: "success",
                 title: "Login realizado com sucesso!",
