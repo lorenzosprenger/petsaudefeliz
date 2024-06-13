@@ -9,15 +9,18 @@
 
 body {
     background-color: var(--cor-principal);
-    overflow: hidden; 
 }
 
 main {
     width: 100vw;
     height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .sidebar {
+    position: absolute;
     width: 10%;
     height: 100vh;
     background-color: #f00;
@@ -43,7 +46,6 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
-    
 }
 
 .icon.ativa .background {
@@ -54,16 +56,39 @@ main {
     z-index: 0;
 }
 
-
 .icon a {
     display: block;
     width: 100%;
     height: 100%;
-    z-index: 1; 
-    position: relative; 
+    z-index: 1;
+    position: relative;
 }
 
 .icon a img {
     width: 100%;
     height: 100%;
+}
+
+table.exercise-table {
+    width: 80%;
+    border-collapse: collapse;
+    margin: auto;
+    color: white;
+    border-radius: 200px;
+    margin-right: 5%;
+}
+
+table.exercise-table th, table.exercise-table td {
+    border: 1px solid #ffffff;
+    padding: 8px;
+    text-align: center;
+    background-color: #454242;
+}
+
+table.exercise-table th {
+    background-color: #171515;
+}
+
+table.exercise-table tbody tr:nth-child(even) {
+    background-color: #252020;
 }
