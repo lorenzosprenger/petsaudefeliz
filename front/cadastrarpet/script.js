@@ -32,10 +32,13 @@ butao.onclick = async function (e) {
 
     });
 
+    
+
     let content = await response.json();
     console.log(content);
 
     if (content.success) {
+        localStorage.setItem("raca", raca);
         Swal.fire({
             icon: "success",
             title: "Cadastro realizado com sucesso!",

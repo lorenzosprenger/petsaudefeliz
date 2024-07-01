@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PETSAUDEFELIZ</title>
-    <link rel="shortcut icon" href="/assets/logoPETSAUDEFELIZ.png" type="image/x-icon">
+    <link rel="shortcut icon" href="/front/assets/logoPETSAUDEFELIZ.png" type="image/x-icon">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -18,8 +18,16 @@
             <div class="input-container">
                 <input type="text" placeholder="Nome" id="nome" required/>
             </div>
-            <div class="input-container">
+            <!-- <div class="input-container">
                 <input type="text" placeholder="Raça" id="raca" required/>
+            </div> -->
+
+            <div class="input-container">
+                <div id="teste" class="dropdown-trigger">Raça <select name="raca" id="raca"><option value="Crioulo">Crioulo</option>
+                    <option value="Mangalarga">Mangalarga</option>
+                    <option value="Quarter Horse">Quarter Horse</option></select>
+                </div>
+
             </div>
             <div class="input-container">
                 <input type="date" placeholder="Data de nascimento" id="data_nasc" required/>
