@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             // Exibir a imagem da raça, se disponível
             if (breedInfo.Imagem) {
-                const imageUrl = `${breedInfo.Imagem}`;
+                const imageUrl = `/front/assets/${breedInfo.Imagem}`;
                 const imgElement = document.getElementById('imagem');
                 console.log(imageUrl);
                 imgElement.src = imageUrl;

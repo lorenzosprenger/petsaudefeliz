@@ -11,6 +11,8 @@ butao.onclick = async function (e) {
     let genero = document.getElementById('genero').value;
     let peso = document.getElementById('peso').value;
     let nivel_atv = document.getElementById('nivel_atv').value;
+    let nomeUsuario = localStorage.getItem('nomeUsuario');
+    console.log(nomeUsuario);
     if (!nome || !raca || !data_nasc || !genero || !peso || !nivel_atv) {
         Swal.fire({
             icon: "error",
@@ -22,7 +24,7 @@ butao.onclick = async function (e) {
         return;
     }
 
-    let data = { idPet, nome, raca, data_nasc, genero, peso, nivel_atv }
+    let data = { idPet, nome, raca, data_nasc, genero, peso, nivel_atv, nomeUsuario}
 
     // POST
     const response = await fetch('http://localhost:3000/api/users/pet', {

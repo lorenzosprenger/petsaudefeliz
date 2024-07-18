@@ -74,7 +74,7 @@ main {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    width: 100%;
+    width: 110%;
 }
 
 .borda {
@@ -91,7 +91,7 @@ main {
     width: 100%;
     display: flex;
     justify-content: center;
-    margin-top: 20px; /* Adiciona um espaço entre a seção de imagem/texto e o parágrafo */
+    margin-top: 3%; /* Adiciona um espaço entre a seção de imagem/texto e o parágrafo */
 }
 
 .texto {

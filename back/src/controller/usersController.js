@@ -94,7 +94,6 @@ async function cadastroUsuario(request, response) {
 
 async function eventoCalendario(request, response) {
     // Preparar o comando de execução no banco
-    // const query = 'INSERT INTO eventos(nome_usuario, lembrete, dia) VALUES(?, ?, ?);';
     const query = 'INSERT INTO eventos(nome_usuario, lembrete, dia) VALUES (?,?,?)';
 
     // Recuperar os dados enviados na requisição
@@ -141,8 +140,8 @@ async function eventoCalendario(request, response) {
 // Função que cria um novo pet 
 async function cadastroPet(request, response) {
     // Preparar o comando de execução no banco
-    const query = 'INSERT INTO pet(idPet, nome, raca, data_nasc, genero, peso, nivel_atv) VALUES(?, ?, ?, ?, ?, ?, ?);';
-
+    const query = 'INSERT INTO pet(idPet, nome, raca, data_nasc, genero, peso, nivel_atv, nameDono) VALUES(?, ?, ?, ?, ?, ?, ?, ?);';
+    
     // Recuperar os dados enviados na requisição
     const params = Array(
         request.body.idPet,
@@ -151,7 +150,8 @@ async function cadastroPet(request, response) {
         request.body.data_nasc,
         request.body.genero,
         request.body.peso,
-        request.body.nivel_atv
+        request.body.nivel_atv,
+        request.body.nomeUsuario
     );
 
     // Executa a ação no banco e valida os retornos para o client que realizou a solicitação

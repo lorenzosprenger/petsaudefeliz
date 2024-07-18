@@ -9,6 +9,7 @@ const router = require('./routes/usersRouter');
 // Importar o pacote dotenv, gerenciador de variáveis de ambiente
 const dotenv = require('dotenv').config();
 
+
 // Instanciar o express na variável app
 const app = express();
 
