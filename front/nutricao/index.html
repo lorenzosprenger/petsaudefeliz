@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PETSAUDEFELIZ</title>
-    <link rel="shortcut icon" href="/front/assets/logoPETSAUDEFELIZ.png"" type="image/x-icon">
+    <link rel="shortcut icon" href="/front/assets/logoPETSAUDEFELIZ.png" type="image/x-icon">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -17,7 +17,6 @@
                 <div class="icon">
                     <a href="/front/conteudoeducacional/index.html"><img src="/front/assets/educacional.png" alt=""></a>
                     <div class="background"></div> 
-
                 </div>
                 <div class="icon ativa">
                     <a href="/front/nutricao/index.html"><img src="/front/assets/nutriçao.png" alt=""></a>
@@ -42,7 +41,7 @@
                     <th>Horário de Recolhimento</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="plan-table-body">
                 <tr>
                     <td>Segunda-feira</td>
                     <td></td>
@@ -88,5 +87,37 @@
             </tbody>
         </table>
     </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const idPet = localStorage.getItem('idUsuario');
+
+            try {
+                const response = await fetch(`http://localhost:3002/plano_pet/${idPet}`);
+                const plan = await response.json();
+
+                if (plan.error) {
+                    alert('Erro ao buscar o plano alimentar: ' + plan.error);
+                    return;
+                }
+
+                const tableBody = document.getElementById('plan-table-body');
+                tableBody.innerHTML = ''; // Limpa o conteúdo existente
+
+                plan.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${item.Dia}</td>
+                        <td>${item.Alimentação}</td>
+                        <td>${item.Soltura}</td>
+                        <td>${item.Recolhimento}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Erro ao buscar o plano alimentar:', error);
+                alert('Erro ao buscar o plano alimentar: ' + error.message);
+            }
+        });
+    </script>
 </body>
 </html>

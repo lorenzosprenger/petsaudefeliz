@@ -137,9 +137,27 @@ async function eventoCalendario(request, response) {
     });
 }
 
+
 // Função que cria um novo pet 
 async function cadastroPet(request, response) {
     // Preparar o comando de execução no banco
+    const getAgeCategory = (birthDateString) => {
+        const today = new Date();
+        const birthDate = new Date(birthDateString);
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDifference = today.getMonth() - birthDate.getMonth();
+        if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        if (age <= 4) {
+            return 'Jovem';
+        } else if (age <= 15) {
+            return 'Adulto';
+        } else {
+            return 'Idoso';
+        }
+    };
+
     const query = 'INSERT INTO pet(idPet, nome, raca, data_nasc, genero, peso, nivel_atv, nameDono) VALUES(?, ?, ?, ?, ?, ?, ?, ?);';
     
     // Recuperar os dados enviados na requisição
@@ -279,5 +297,6 @@ module.exports = {
     cadastroUsuario,
     eventoCalendario,
     updateUser,
-    deleteUser
+    deleteUser,
+
 }
