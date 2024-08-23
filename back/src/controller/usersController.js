@@ -18,7 +18,7 @@ const connection = require('../config/db');
 // Função que retorna todos usuários no banco de dados
 async function listUsers(request, response) {
     // Preparar o comando de execução no banco
-    connection.query('SELECT id, name, senha FROM usuarios', (err, results) => { 
+    connection.query('SELECT id, name, email, senha FROM usuarios', (err, results) => { 
         try {  // Tenta retornar as solicitações requisitadas
             if (results) {  // Se tiver conteúdo 
                 response.status(200).json({
@@ -158,18 +158,17 @@ async function cadastroPet(request, response) {
         }
     };
 
-    const query = 'INSERT INTO pet(idPet, nome, raca, data_nasc, genero, peso, nivel_atv, nameDono) VALUES(?, ?, ?, ?, ?, ?, ?, ?);';
+    const query = 'INSERT INTO pet( nome, raca, data_nasc, genero, peso, nivel_atv, usuario_id) VALUES( ?, ?, ?, ?, ?, ?, ?);';
     
     // Recuperar os dados enviados na requisição
     const params = Array(
-        request.body.idPet,
         request.body.nome,
         request.body.raca,
         request.body.data_nasc,
         request.body.genero,
         request.body.peso,
         request.body.nivel_atv,
-        request.body.nomeUsuario
+        request.body.usuario_id
     );
 
     // Executa a ação no banco e valida os retornos para o client que realizou a solicitação

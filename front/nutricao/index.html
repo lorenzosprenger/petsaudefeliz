@@ -103,7 +103,7 @@
                 const tableBody = document.getElementById('plan-table-body');
                 tableBody.innerHTML = ''; // Limpa o conteúdo existente
 
-                plan.forEach(item => {
+                plan.plan.forEach(item => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
                         <td>${item.Dia}</td>
