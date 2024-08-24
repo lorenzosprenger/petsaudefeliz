@@ -633,9 +633,9 @@ app.get('/plano_pet/:idPet', (req, res) => {
     // Consulta SQL para obter a idade, peso e nível de atividade do pet com base no ID
     const query = `
         SELECT 
-            TIMESTAMPDIFF(YEAR, data_nasc, CURDATE()) AS idade_anos, // Calcula a idade do pet em anos
-            peso, // Obtém o peso do pet
-            nivel_atv // Obtém o nível de atividade do pet
+            TIMESTAMPDIFF(YEAR, data_nasc, CURDATE()) AS idade_anos, 
+            peso, 
+            nivel_atv 
         FROM pet 
         WHERE usuario_id = ?
     `;
