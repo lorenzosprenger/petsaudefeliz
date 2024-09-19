@@ -126,13 +126,13 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const response = await fetch(`http://localhost:3000/api/users/calendario/get`);
             const result = await response.json();
-
+    
             if (result.success) {
-                eventListContainer.innerHTML = ''; // Limpa a lista antes de adicionar novos eventos
+                eventListContainer.innerHTML = ''; // Limpa a lista de eventos
                 const diasCalendario = document.querySelectorAll('.calendar-day');
-
+    
                 result.data.forEach(evento => {
-                    adicionarEventoNaLista(evento.lembrete, evento.dia);
+                    adicionarEventoNaLista(evento.lembrete, evento.dia, evento.id_evento);
                     
                     // Marcar o dia com evento no calendário
                     const diaEvento = new Date(evento.dia).getDate();
@@ -149,10 +149,53 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Erro ao conectar com o servidor:', error);
         }
     }
+    
 
-    function adicionarEventoNaLista(textoEvento, dataEvento) {
+    function adicionarEventoNaLista(textoEvento, dataEvento, idEvento) {
         const listItem = document.createElement('li');
         listItem.textContent = `${dataEvento}: ${textoEvento}`;
+    
+        // Cria o botão de excluir
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Excluir';
+        deleteButton.style.marginLeft = '10px';
+
+        
+        deleteButton.addEventListener('click', () => {
+            console.log(`Tentando excluir o evento com id: ${idEvento}`); // Verifique o ID do evento
+            excluirEvento(idEvento, listItem); // Passa o ID do evento e o item da lista para excluir
+        });
+    
+        // Adiciona o botão ao item da lista
+        listItem.appendChild(deleteButton);
         eventListContainer.appendChild(listItem);
     }
+    console.log(`Tentando excluir o evento com id: ${idEvento}`);
+
+    async function excluirEvento(idEvento, listItem) {
+        const confirmacao = confirm('Tem certeza de que deseja excluir este evento?');
+
+        if (!confirmacao) return;
+    
+        try {
+            const response = await fetch(`http://localhost:3000/api/users/calendario/${idEvento}`, {
+                method: 'DELETE',
+            });
+    
+            const result = await response.json();
+            if (result.success) {
+                alert('Evento excluído com sucesso!');
+                listItem.remove(); // Remove o item da lista de eventos do HTML
+                renderizarCalendario(); // Atualiza o calendário
+                carregarEventos(); // Recarrega os eventos
+            } else {
+                alert('Erro ao excluir o evento.');
+            }
+        } catch (error) {
+            console.error('Erro ao excluir o evento:', error);
+            alert('Erro ao excluir o evento.');
+        }
+    }
+    
+        
 });

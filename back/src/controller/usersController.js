@@ -141,15 +141,15 @@ async function eventoCalendario(request, response) {
 
 // Função que atualiza um evento no banco de dados
 async function carregarEventos(request, response) {
-    const query = 'SELECT lembrete, dia FROM eventos'; // Query para buscar os eventos
+    const query = 'SELECT id_evento, lembrete, dia FROM eventos'; // Inclua o id_evento para permitir a exclusão
     connection.query(query, (err, results) => {
         if (err) {
             return response.status(500).json({ success: false, message: 'Erro ao carregar eventos', error: err });
         }
-        // Retorna os eventos em formato JSON
-        response.status(200).json({ success: true, data: results });
+        response.status(200).json({ success: true, data: results }); // Retorna os eventos em formato JSON
     });
 }
+
 
 
 // Função que exclui um evento do banco de dados
@@ -180,6 +180,7 @@ async function deleteEventoCalendario(request, response) {
         }
     });
 }
+
 
 
 // Função que cria um novo pet 
