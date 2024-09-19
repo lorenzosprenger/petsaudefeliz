@@ -93,39 +93,46 @@ async function cadastroUsuario(request, response) {
 }
 
 async function eventoCalendario(request, response) {
-    const query = 'INSERT INTO eventos(nome_usuario, lembrete, dia) VALUES (?, ?, ?)';
-    const params = [
+    // Preparar o comando de execução no banco
+    const query = 'INSERT INTO eventos(nome_usuario, lembrete, dia) VALUES (?,?,?)';
+
+    // Recuperar os dados enviados na requisição
+    const params = Array(
         request.body.nome_usuario,
         request.body.texto_evento,
         request.body.data_evento
-    ];
+    );
 
-    console.log('Recebendo parâmetros:', params); // Verifica se os parâmetros estão sendo recebidos
 
+    console.log(params)
+    // Executa a ação no banco e valida os retornos para o client que realizou a solicitação
     connection.query(query, params, (err, results) => {
-        if (err) {
-            console.error('Erro ao inserir no banco de dados:', err); // Loga o erro no console do servidor
-            return response.status(500).json({
-                success: false,
-                message: 'Erro ao inserir evento no banco de dados.',
-                error: err
-            });
-        }
-
-        console.log('Resultado da inserção:', results); // Loga o resultado da query para verificar se a inserção foi bem-sucedida
-
-        // Verifica se o evento foi inserido
-        if (results.affectedRows > 0) {
-            response.status(201).json({
-                success: true,
-                message: 'Sucesso! Evento cadastrado.',
-                data: results
-            });
-        } else {
+        try {
+            if (results) {
+                response
+                    .status(201)
+                    .json({
+                        success: true,
+                        message: `Sucesso! Evento cadastrado.`,
+                        data: results
+                    });
+            } else {
+                response
+                    .status(400)
+                    .json({
+                        success: false,
+                        message: `Não foi possível realizar o cadastro do Evento. Verifique os dados informados`,
+                        query: err.sql,
+                        sqlMessage: err.sqlMessage
+                    });
+            }
+        } catch (e) { // Caso aconteça algum erro na execução
             response.status(400).json({
-                success: false,
-                message: 'Falha ao inserir o evento.'
-            });
+                    succes: false,
+                    message: "Ocorreu um erro. Não foi possível cadastrar o Evento!",
+                    query: err.sql,
+                    sqlMessage: err.sqlMessage
+                });
         }
     });
 }
@@ -133,57 +140,33 @@ async function eventoCalendario(request, response) {
 
 
 // Função que atualiza um evento no banco de dados
-async function updateEventoCalendario(request, response) {
-    const query = "UPDATE eventos SET lembrete = ?, dia = ? WHERE id_evento = ?";
-
-    // Parâmetros para a atualização do evento
-    const params = Array(
-        request.body.texto_evento,  // O novo texto do evento
-        request.body.data_evento,    // A nova data do evento
-        request.params.id_evento     // O id do evento a ser atualizado
-    );
-
-    connection.query(query, params, (err, results) => {
-        try {
-            if (results.affectedRows > 0) {
-                response.status(200).json({
-                    success: true,
-                    message: 'Evento atualizado com sucesso!',
-                    data: results
-                });
-            } else {
-                response.status(400).json({
-                    success: false,
-                    message: 'Não foi possível atualizar o evento. Verifique o ID fornecido.',
-                    query: err?.sql,
-                    sqlMessage: err?.sqlMessage
-                });
-            }
-        } catch (e) {
-            response.status(500).json({
-                success: false,
-                message: 'Ocorreu um erro ao tentar atualizar o evento.',
-                error: e
-            });
+async function carregarEventos(request, response) {
+    const query = 'SELECT lembrete, dia FROM eventos'; // Query para buscar os eventos
+    connection.query(query, (err, results) => {
+        if (err) {
+            return response.status(500).json({ success: false, message: 'Erro ao carregar eventos', error: err });
         }
+        // Retorna os eventos em formato JSON
+        response.status(200).json({ success: true, data: results });
     });
 }
 
+
+// Função que exclui um evento do banco de dados
 async function deleteEventoCalendario(request, response) {
     const query = "DELETE FROM eventos WHERE id_evento = ?";
     const params = [request.params.id_evento];  // O id do evento a ser excluído
 
     connection.query(query, params, (err, results) => {
         if (err) {
-            console.error('Erro ao executar a query:', err);
+            console.error('Erro ao excluir o evento:', err);
             return response.status(500).json({
                 success: false,
-                message: 'Erro ao excluir o evento.',
+                message: 'Erro ao excluir o evento no banco de dados.',
                 error: err
             });
         }
 
-        // Verificando se a exclusão foi bem-sucedida
         if (results.affectedRows > 0) {
             response.status(200).json({
                 success: true,
@@ -197,7 +180,6 @@ async function deleteEventoCalendario(request, response) {
         }
     });
 }
-
 
 
 // Função que cria um novo pet 
@@ -358,7 +340,7 @@ module.exports = {
     cadastroUsuario,
     eventoCalendario,
     deleteEventoCalendario,
-    updateEventoCalendario,
+    carregarEventos,
     updateUser,
     deleteUser,
 

@@ -2,16 +2,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const calendar = document.getElementById('calendar');
     const eventInput = document.getElementById('event-input');
     const addEventButton = document.getElementById('add-event');
-    const eventList = document.getElementById('event-list');
+    const eventListContainer = document.getElementById('event-list');
     const dataAtual = new Date();
     let mesAtual = dataAtual.getMonth();
     let anoAtual = dataAtual.getFullYear();
-
-    let eventosSalvos = JSON.parse(localStorage.getItem("eventos")) || [];  
     const nomeUsuario = localStorage.getItem("nomeUsuario");
 
     renderizarCalendario();
-    carregarEventos(); 
+    carregarEventos(); // Função que busca e exibe os eventos
 
     function renderizarCalendario() {
         const nomesMeses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
@@ -31,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </thead>
                 <tbody>
                     <tr>`;
-
+        
         for (let i = 0; i < primeiroDiaDaSemana; i++) {
             calendarioHTML += '<td></td>';
         }
@@ -41,7 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
             calendarioHTML += `<td class="calendar-day" data-day="${contagemDias}">${contagemDias}</td>`;
             contagemDias++;
         }
-
         calendarioHTML += '</tr>';
 
         while (contagemDias <= diasNoMes) {
@@ -66,6 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 anoAtual--;
             }
             renderizarCalendario();
+            carregarEventos(); // Recarrega os eventos para o mês atualizado
         });
 
         document.getElementById('next').addEventListener('click', () => {
@@ -75,6 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 anoAtual++;
             }
             renderizarCalendario();
+            carregarEventos(); // Recarrega os eventos para o mês atualizado
         });
 
         const diasCalendario = document.querySelectorAll('.calendar-day');
@@ -92,89 +91,68 @@ document.addEventListener('DOMContentLoaded', () => {
             const diaSelecionadoValue = diaSelecionado.getAttribute('data-day');
             const mesSelecionado = mesAtual + 1;
             const anoSelecionado = anoAtual;
-            const dataSelecionada = `${anoSelecionado}-${String(mesSelecionado).padStart(2, '0')}-${String(diaSelecionadoValue).padStart(2, '0')}`;
+            const dataSelecionada = `${anoSelecionado}-${mesSelecionado}-${diaSelecionadoValue}`;
             const textoEvento = eventInput.value.trim();
 
-            if (textoEvento !== '') {
-                let novoEvento = {
-                    nome_usuario: nomeUsuario,
-                    texto_evento: textoEvento,
-                    data_evento: dataSelecionada
-                };
-
-                // Enviando o evento ao backend
-                fetch('/api/eventos', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(novoEvento)
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        eventosSalvos.push(novoEvento);
-                        localStorage.setItem("eventos", JSON.stringify(eventosSalvos));
-                        atualizarListaEventos();
-                        eventInput.value = '';
-                    } else {
-                        alert('Erro ao adicionar o evento.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Erro na requisição ao backend:', error);
-                    alert('Erro ao comunicar com o servidor.');
+            async function enviarEvento(nomeUsuario, textoEvento, dataSelecionada) {
+                let data = { nome_usuario: nomeUsuario, texto_evento: textoEvento, data_evento: dataSelecionada };
+                const response = await fetch('http://localhost:3000/api/users/calendario', {
+                    method: "POST",
+                    headers: { "Content-type": "application/json;charset=UTF-8" },
+                    body: JSON.stringify(data)
                 });
+
+                let content = await response.json();
+                if (content.success) {
+                    alert("Evento adicionado com sucesso!");
+                    carregarEventos(); // Recarrega a lista de eventos
+                } else {
+                    alert("Erro ao adicionar o evento.");
+                }
+            }
+
+            if (textoEvento !== '') {
+                enviarEvento(nomeUsuario, textoEvento, dataSelecionada);
+                eventInput.value = '';
             } else {
-                alert('Por favor, digite um evento antes de adicionar.');
+                alert('Digite um evento antes de adicionar.');
             }
         } else {
-            alert('Por favor, selecione um dia do calendário antes de adicionar um evento.');
+            alert('Selecione um dia do calendário antes de adicionar um evento.');
         }
     });
 
-    function atualizarListaEventos() {
-        eventList.innerHTML = '';
-        eventosSalvos.sort((a, b) => new Date(a.data_evento) - new Date(b.data_evento));
-        eventosSalvos.forEach((evento, index) => {
-            const listItem = document.createElement('li');
-            listItem.innerHTML = `Evento: ${evento.texto_evento} - Data: ${evento.data_evento}
-                <button class="delete-event" data-index="${index}">Excluir</button>`;
-            eventList.appendChild(listItem);
-        });
+    async function carregarEventos() {
+        try {
+            const response = await fetch(`http://localhost:3000/api/users/calendario/get`);
+            const result = await response.json();
 
-        document.querySelectorAll('.delete-event').forEach(button => {
-            button.addEventListener('click', (e) => {
-                const index = e.target.getAttribute('data-index');
-                excluirEvento(index);
-            });
-        });
-    }
+            if (result.success) {
+                eventListContainer.innerHTML = ''; // Limpa a lista antes de adicionar novos eventos
+                const diasCalendario = document.querySelectorAll('.calendar-day');
 
-    function excluirEvento(index) {
-        const evento = eventosSalvos[index];
-
-        if (confirm("Tem certeza que deseja excluir este evento?")) {
-            fetch(`/api/eventos/${evento.id_evento}`, {
-                method: 'DELETE'
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    eventosSalvos.splice(index, 1);
-                    localStorage.setItem("eventos", JSON.stringify(eventosSalvos));
-                    atualizarListaEventos();
-                } else {
-                    alert('Erro ao excluir o evento.');
-                }
-            })
-            .catch(error => console.error('Erro:', error));
+                result.data.forEach(evento => {
+                    adicionarEventoNaLista(evento.lembrete, evento.dia);
+                    
+                    // Marcar o dia com evento no calendário
+                    const diaEvento = new Date(evento.dia).getDate();
+                    diasCalendario.forEach(dia => {
+                        if (parseInt(dia.getAttribute('data-day')) === diaEvento) {
+                            dia.classList.add('event-day');
+                        }
+                    });
+                });
+            } else {
+                console.error('Erro ao carregar eventos:', result.message);
+            }
+        } catch (error) {
+            console.error('Erro ao conectar com o servidor:', error);
         }
     }
 
-    function carregarEventos() {
-        if (eventosSalvos.length > 0) {
-            atualizarListaEventos();
-        }
+    function adicionarEventoNaLista(textoEvento, dataEvento) {
+        const listItem = document.createElement('li');
+        listItem.textContent = `${dataEvento}: ${textoEvento}`;
+        eventListContainer.appendChild(listItem);
     }
 });
