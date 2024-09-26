@@ -5,14 +5,17 @@
 }
 
 :root {
-    --cor-principal: #dddddd;
-    --cor-borda: #ff0000; /* Cor das bordas */
+    --cor-principal: #f4f4f9; /* Cor de fundo principal mais clara */
+    --cor-borda: #ff0000; /* Mantém a cor das bordas em vermelho */
+    --cor-texto: #333; /* Cor do texto mais suave */
 }
 
 body {
     background-color: var(--cor-principal);
-    font-family: Arial, sans-serif;
+    color: var(--cor-texto); /* Usa a nova cor de texto */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Fonte mais moderna */
 }
+
 
 main {
     width: 100vw;
@@ -140,33 +143,63 @@ main {
     background-color: #bbb;
 }
 
+/* Estilo minimalista para o dia selecionado no calendário */
+.calendar-day.selected {
+    background-color: rgba(255, 0, 0, 0.1); /* Fundo vermelho claro e transparente */
+    border: 2px solid #ff0000; /* Borda fina e elegante em vermelho */
+    color: #ff0000; /* Texto vermelho */
+    font-weight: bold;
+    border-radius: 8px; /* Leve arredondamento */
+    transition: background-color 0.3s ease, border 0.3s ease; /* Transição suave */
+}
+
+/* Estilo minimalista para o dia atual */
+.calendar-day[data-day="${new Date().getDate()}"] {
+    background-color: rgba(255, 0, 0, 0.05); /* Fundo sutil */
+    color: #333; /* Cor do texto mais suave */
+    font-weight: bold;
+    border-radius: 8px;
+    transition: background-color 0.3s ease; /* Transição suave */
+}
+
+/* Hover para os dias do calendário */
+.calendar-day:hover {
+    background-color: rgba(255, 0, 0, 0.1); /* Mesma cor usada no dia selecionado */
+    cursor: pointer;
+}
+
 #event-form {
     margin-top: 20px; /* Espaçamento do topo */
     text-align: center;
 }
 
+/* Estilos para o campo de input de evento */
 #event-input {
-    padding: 10px;
-    border: 2px solid #ff0000; /* Borda vermelha */
-    border-radius: 5px;
-    margin-right: 10px; /* Espaçamento à direita */
-    width: 200px; /* Largura do campo de entrada */
-    margin-bottom: 10px;
-    
+    padding: 12px 16px;
+    border: 2px solid #ff0000;
+    border-radius: 8px; /* Borda arredondada maior */
+    margin-right: 12px;
+    width: 240px; /* Aumenta um pouco a largura */
+    font-size: 16px; /* Aumenta o tamanho do texto */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra leve */
 }
 
+/* Estilos para o botão "Adicionar Evento" */
 #add-event {
-    padding: 10px 20px;
-    background-color: #ff0000; /* Cor de fundo vermelha */
-    color: #fff; /* Cor do texto branco */
+    padding: 12px 24px;
+    background-color: #ff0000;
+    color: #fff;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px; /* Borda arredondada maior */
     cursor: pointer;
-    transition: background-color 0.3s; /* Transição suave de cor */
+    font-size: 16px; /* Aumenta o tamanho do texto */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra leve */
 }
 
 #add-event:hover {
-    background-color: #c00; /* Cor de fundo vermelha mais escura ao passar o mouse */
+    background-color: #c00;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Sombra mais forte ao passar o mouse */
 }
 
 
@@ -182,10 +215,42 @@ main {
     padding: 0;
 }
 
+/* Estilos para os itens da lista de eventos */
 #event-list li {
-    background-color: #f9f9f9;
-    margin-bottom: 10px;
-    padding: 10px;
-    border: 1px solid #ddd;
+    background-color: #f1f1f1; /* Cor de fundo cinza claro */
+    margin-bottom: 15px; /* Aumenta o espaçamento entre os itens */
+    padding: 12px;
+    border: 1px solid #ff0000;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between; /* Espaçamento entre o texto e o botão */
+    align-items: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra leve */
+}
+
+/* Estilos para o botão de excluir dentro dos itens da lista */
+#event-list li .delete-btn {
+    padding: 6px 12px;
+    background-color: #ff4d4d;
     border-radius: 5px;
+    font-size: 14px;
+}
+
+
+.buttonDelete{
+    padding: 5px 10px;
+    background-color: #ff4d4d; 
+    color: white; 
+    border: none;
+    border-radius: 5px; 
+    cursor: pointer;
+    transition: background-color 0.3s ease; 
+}
+
+.buttonDelete:hover {
+    background-color: #ff1a1a; 
+}
+
+.buttonDelete:active {
+    background-color: #cc0000;
 }

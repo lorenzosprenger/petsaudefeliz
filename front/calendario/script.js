@@ -159,8 +159,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const deleteButton = document.createElement('button');
         deleteButton.textContent = 'Excluir';
         deleteButton.style.marginLeft = '10px';
+        deleteButton.classList.add('buttonDelete');
 
-        
+
         deleteButton.addEventListener('click', () => {
             console.log(`Tentando excluir o evento com id: ${idEvento}`); // Verifique o ID do evento
             excluirEvento(idEvento, listItem); // Passa o ID do evento e o item da lista para excluir
