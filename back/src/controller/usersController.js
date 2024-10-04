@@ -94,13 +94,14 @@ async function cadastroUsuario(request, response) {
 
 async function eventoCalendario(request, response) {
     // Preparar o comando de execução no banco
-    const query = 'INSERT INTO eventos(nome_usuario, lembrete, dia) VALUES (?,?,?)';
+    const query = 'INSERT INTO eventos(lembrete, dia, usuario_id) VALUES (?,?,?)';
 
     // Recuperar os dados enviados na requisição
     const params = Array(
-        request.body.nome_usuario,
         request.body.texto_evento,
-        request.body.data_evento
+        request.body.data_evento,
+        request.body.usuario_id
+
     );
 
 

@@ -7,9 +7,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let mesAtual = dataAtual.getMonth();
     let anoAtual = dataAtual.getFullYear();
     const nomeUsuario = localStorage.getItem("nomeUsuario");
-
+    const usuarioId = localStorage.getItem("idUsuario");
     renderizarCalendario();
     carregarEventos(); // Função que busca e exibe os eventos
+    console.log(localStorage.getItem('idUsuario'));
 
     function renderizarCalendario() {
         const nomesMeses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
@@ -93,34 +94,49 @@ document.addEventListener('DOMContentLoaded', () => {
             const anoSelecionado = anoAtual;
             const dataSelecionada = `${anoSelecionado}-${mesSelecionado}-${diaSelecionadoValue}`;
             const textoEvento = eventInput.value.trim();
-
-            async function enviarEvento(nomeUsuario, textoEvento, dataSelecionada) {
-                let data = { nome_usuario: nomeUsuario, texto_evento: textoEvento, data_evento: dataSelecionada };
-                const response = await fetch('http://localhost:3000/api/users/calendario', {
-                    method: "POST",
-                    headers: { "Content-type": "application/json;charset=UTF-8" },
-                    body: JSON.stringify(data)
-                });
-
-                let content = await response.json();
-                if (content.success) {
-                    alert("Evento adicionado com sucesso!");
-                    carregarEventos(); // Recarrega a lista de eventos
-                } else {
+    
+            async function enviarEvento(idUsuario, textoEvento, dataSelecionada) {
+                let data = { 
+                    usuario_id: idUsuario,  // Agora usamos o idUsuario correto do localStorage
+                    texto_evento: textoEvento, 
+                    data_evento: dataSelecionada 
+                };
+    
+                try {
+                    const response = await fetch('http://localhost:3000/api/users/calendario', {
+                        method: "POST",
+                        headers: { "Content-type": "application/json;charset=UTF-8" },
+                        body: JSON.stringify(data)
+                    });
+    
+                    let content = await response.json();
+                    if (content.success) {
+                        alert("Evento adicionado com sucesso!");
+                        carregarEventos(); // Recarrega a lista de eventos
+                    } else {
+                        console.error('Erro no servidor:', content);
+                        alert("Erro ao adicionar o evento.");
+                    }
+                } catch (error) {
+                    console.error('Erro ao adicionar evento:', error);
                     alert("Erro ao adicionar o evento.");
                 }
             }
-
-            if (textoEvento !== '') {
-                enviarEvento(nomeUsuario, textoEvento, dataSelecionada);
+    
+            // Obtenha o ID do usuário corretamente usando a chave "idUsuario"
+            const idUsuario = localStorage.getItem("idUsuario"); // Agora estamos usando idUsuario do localStorage
+            
+            if (textoEvento !== '' && idUsuario) {
+                enviarEvento(idUsuario, textoEvento, dataSelecionada); // Passa o idUsuario correto
                 eventInput.value = '';
             } else {
-                alert('Digite um evento antes de adicionar.');
+                alert('Digite um evento antes de adicionar ou faça login.');
             }
         } else {
             alert('Selecione um dia do calendário antes de adicionar um evento.');
         }
     });
+    
 
     async function carregarEventos() {
         try {
@@ -161,9 +177,9 @@ document.addEventListener('DOMContentLoaded', () => {
         deleteButton.style.marginLeft = '10px';
         deleteButton.classList.add('buttonDelete');
 
+        console.log(`Tentando excluir o evento com id: ${idEvento}`); // Verifique o ID do evento
 
         deleteButton.addEventListener('click', () => {
-            console.log(`Tentando excluir o evento com id: ${idEvento}`); // Verifique o ID do evento
             excluirEvento(idEvento, listItem); // Passa o ID do evento e o item da lista para excluir
         });
     
@@ -171,7 +187,6 @@ document.addEventListener('DOMContentLoaded', () => {
         listItem.appendChild(deleteButton);
         eventListContainer.appendChild(listItem);
     }
-    console.log(`Tentando excluir o evento com id: ${idEvento}`);
 
     async function excluirEvento(idEvento, listItem) {
         const confirmacao = confirm('Tem certeza de que deseja excluir este evento?');

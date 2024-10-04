@@ -33,7 +33,7 @@ button.onclick = async function (e) {
             // Se houver correspondência, salva o ID e o nome do usuário no localStorage
             localStorage.setItem("idUsuario", content.data[i].id);
             localStorage.setItem("nomeUsuario", content.data[i].name);
-
+            
             // Exibe uma mensagem de sucesso usando SweetAlert2
             Swal.fire({
                 icon: "success",
