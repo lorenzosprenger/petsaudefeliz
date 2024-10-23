@@ -251,48 +251,48 @@ async function cadastroPet(request, response) {
 
 // Função que atualiza o usuário no banco
 async function updateUser(request, response) {
-    // Preparar o comando de execução no banco
-    const query = "UPDATE users SET `name` = ?, `email` = ?, `senha` = ? WHERE `id` = ?";
+    const { name, email, senha } = request.body;
 
-    // Recuperar os dados enviados na requisição respectivamente
-    const params = Array(
-        request.body.name,
-        request.body.email,
-        request.body.senha,
-        request.params.id  // Recebimento de parametro da rota
-    );
+    // Preparar a query SQL dinamicamente se a senha foi alterada
+    let query = 'UPDATE usuarios SET `name` = ?, `email` = ?';
+    const params = [name, email];
 
-    // Executa a ação no banco e valida os retornos para o client que realizou a solicitação
+    if (senha) {
+        query += ', `senha` = ?';
+        params.push(senha);
+    }
+
+    query += ' WHERE `id` = ?';
+    params.push(request.params.id);  // ID do usuário da rota
+
+    // Executar a query
     connection.query(query, params, (err, results) => {
-        try {
-            if (results) {
-                response
-                    .status(200)
-                    .json({
-                        success: true,
-                        message: `Sucesso! Usuário atualizado.`,
-                        data: results
-                    });
-            } else {
-                response
-                    .status(400)
-                    .json({
-                        success: false,
-                        message: `Não foi possível realizar a atualização. Verifique os dados informados`,
-                        query: err.sql,
-                        sqlMessage: err.sqlMessage
-                    });
-            }
-        } catch (e) { // Caso aconteça algum erro na execução
-            response.status(400).json({
-                    succes: false,
-                    message: "Ocorreu um erro. Não foi possível atualizar usuário!",
-                    query: err.sql,
-                    sqlMessage: err.sqlMessage
-                });
+        if (err) {
+            console.error('Erro na atualização do usuário:', err);
+            console.log('Query SQL executada:', query);  // Log da query para debugar
+            console.log('Parâmetros usados:', params);   // Log dos parâmetros
+            return response.status(500).json({
+                success: false,
+                message: 'Erro ao atualizar usuário',
+                error: err.message // Mensagem de erro amigável
+            });
+        }
+
+        if (results.affectedRows > 0) {
+            response.status(200).json({
+                success: true,
+                message: 'Sucesso! Usuário atualizado.'
+            });
+        } else {
+            response.status(404).json({
+                success: false,
+                message: 'Usuário não encontrado.'
+            });
         }
     });
 }
+
+
 
 // Função que remove usuário no banco
 async function deleteUser(request, response) {
@@ -336,6 +336,38 @@ async function deleteUser(request, response) {
     });
 }
 
+// Função que busca todos os pets do usuário
+async function getPetsByUserId(request, response) {
+    const userId = request.params.id;  // O ID do usuário é passado como parâmetro na rota
+
+    const query = 'SELECT nome, raca, data_nasc, genero, peso, nivel_atv FROM pet WHERE usuario_id = ?';  // Comando SQL para buscar os pets do usuário
+
+    // Executa a consulta no banco de dados
+    connection.query(query, [userId], (err, results) => {
+        try {
+            if (results && results.length > 0) {
+                response.status(200).json({
+                    success: true,
+                    message: `Pets do usuário ${userId} retornados com sucesso!`,
+                    pets: results  // Retorna a lista de pets no JSON
+                });
+            } else {
+                response.status(404).json({
+                    success: false,
+                    message: `Nenhum pet encontrado para o usuário ${userId}.`
+                });
+            }
+        } catch (e) {
+            response.status(500).json({
+                success: false,
+                message: 'Ocorreu um erro ao buscar os pets do usuário.',
+                error: e
+            });
+        }
+    });
+}
+
+
 module.exports = {
     listUsers,
     cadastroPet,
@@ -345,5 +377,6 @@ module.exports = {
     carregarEventos,
     updateUser,
     deleteUser,
+    getPetsByUserId
 
 }

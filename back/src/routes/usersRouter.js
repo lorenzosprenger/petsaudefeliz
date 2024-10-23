@@ -19,7 +19,8 @@ const {
     deleteUser,
     eventoCalendario,
     carregarEventos,  
-    deleteEventoCalendario 
+    deleteEventoCalendario,
+    getPetsByUserId
 } = require('../controller/usersController')
 
 // Criar os endpoints (rotas) que serão acessados a partir dos métodos HTTP (get,post,put,delete)
@@ -30,6 +31,7 @@ router.post('/users/calendario', eventoCalendario);
 router.get('/users/calendario/get', carregarEventos);  
 router.delete('/users/calendario/:id_evento', deleteEventoCalendario);
 router.put('/user/:id', updateUser);
-router.delete('/user/:id', deleteUser);
+router.delete('/user/:id/delete', deleteUser);
+router.get('/users/:id/pets', getPetsByUserId);
 
 module.exports = router;
