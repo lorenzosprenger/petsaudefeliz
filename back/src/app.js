@@ -9,6 +9,8 @@ const router = require('./routes/usersRouter');
 // Importar o pacote dotenv, gerenciador de variáveis de ambiente
 const dotenv = require('dotenv').config();
 
+const path = require("path");
+const fileUpload = require("express-fileupload");
 
 // Instanciar o express na variável app
 const app = express();
@@ -19,6 +21,9 @@ app.use(express.json());
 app.use(cors())
 // Habilitar as rotas na aplicação
 app.use('/api', router);
+// Habilitar o upload de arquivos
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 // Setar a porta do servidor, a parir do arquivo .env
 app.set('port', process.env.PORT || 1903);
 

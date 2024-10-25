@@ -1,3 +1,5 @@
+const userId = localStorage.getItem('idUsuario'); // Pegar o idUsuario do localStorage
+
 document.getElementById('toggle-password').addEventListener('click', function () {
     const passwordInput = document.getElementById('password');
     const toggleButton = this;
@@ -14,8 +16,6 @@ document.getElementById('toggle-password').addEventListener('click', function ()
 
 // Função para buscar as informações do usuário e os pets do backend
 function fetchUserProfileAndPets() {
-    const userId = localStorage.getItem('idUsuario'); // Pegar o idUsuario do localStorage
-
     if (!userId) {
         console.error('ID do usuário não encontrado no localStorage');
         return;
@@ -81,8 +81,6 @@ function fetchUserProfileAndPets() {
 document.getElementById('edit-profile-form').addEventListener('submit', function(event) {
     event.preventDefault(); // Evita o comportamento padrão de recarregar a página
 
-    const userId = localStorage.getItem('idUsuario'); // Pegar o idUsuario do localStorage
-
     if (!userId) {
         console.error('ID do usuário não encontrado no localStorage');
         return;
@@ -132,6 +130,46 @@ document.getElementById('edit-profile-form').addEventListener('submit', function
         alert('Houve um erro ao atualizar o perfil.');
     });
 });
+
+
+let botao = document.getElementById('edit-button');
+
+let img_perfil = null;
+botao.onclick = async function(e){
+    e.preventDefault()
+
+    let input_file = document.getElementById('img_perfil').value;
+    console.log(input_file);
+
+    let formData = new FormData();
+
+    if (img_perfil) {
+      console.log("Arquivo de imagem selecionado:", img_perfil);
+      formData.append("im", img_perfil);
+    }
+
+    console.log(formData);
+
+    // PUT
+    // const response = await fetch(
+    //   `http://localhost:3000/api/users/${userId}/img/perfil`,
+    //   {
+    //     method: "PUT",
+    //     body: formData, // Enviando todos os dados e a imagem juntos
+    //   }
+    // );
+
+    // let content = await response.json();
+    // console.log(content);
+
+    // if(content.success) {
+    //     alert("funfou!");
+    // }
+    // else {
+    //     alert("deu merda!")
+    // }
+}
+
 
 // Chama a função para buscar os dados do perfil e dos pets quando a página é carregada
 window.onload = function() {

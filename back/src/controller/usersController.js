@@ -14,6 +14,29 @@
 // Importa as configurações do banco de dados na variável connection
 const connection = require('../config/db');
 
+const path = require('path');
+const fs = require("fs");
+
+const uploadPath = path.join(__dirname, "..", "uploads");
+
+// Irá criar a pasta uploads se ela já não existir
+if (!fs.existsSync(uploadPath)) {
+  fs.mkdirSync(uploadPath);
+}
+
+// Caminhos para as subpastas img_cavalo e img_perfil
+const imgCavalo = path.join(uploadPath, "img_cavalo");
+const imgPerfilPath = path.join(uploadPath, "img_perfil");
+
+// Irá criar a pasta imgCavalos se ela já não existir
+if (!fs.existsSync(imgCavalo)) {
+  fs.mkdirSync(imgCavalo);
+}
+
+// Irá criar a pasta img_perfil se ela já não existir
+if (!fs.existsSync(imgPerfilPath)) {
+  fs.mkdirSync(imgPerfilPath);
+}
 
 // Função que retorna todos usuários no banco de dados
 async function listUsers(request, response) {
@@ -368,6 +391,44 @@ async function getPetsByUserId(request, response) {
 }
 
 
+async function envioImgUsuario(request, response) {
+    const img_perfil = request.files.img_perfil;
+    const imgPerfilNome = Date.now() + path.extname(img_perfil.name);
+  
+    const imgPerfilPath = path.join(__dirname, "..", "uploads", "img_perfil");
+  
+    img_perfil.mv(path.join(imgPerfilPath, imgPerfilNome), (erro) => {
+      if (erro) {
+        return response.status(400).json({
+          success: false,
+          message: "Erro ao mover o arquivo."
+        });
+      } else {
+        const params = Array(
+            imgPerfilNome,
+          request.params.id
+        );
+  
+        const query = "UPDATE `usuarios` SET `img_perfil` = ? WHERE `id` = ?;";
+  
+        connection.query(query, params, (err, results) => {
+          if (results) {
+            response.status(201).json({
+              success: true,
+              message: "Sucesso com o envio da imagem!!",
+              data: results
+            });
+          } else {
+            response.status(400).json({
+              success: false,
+              message: "Ops, deu problemas com o envio da imagem!!",
+              data: err
+            });
+          }
+        });
+      }
+    });
+  }
 module.exports = {
     listUsers,
     cadastroPet,
@@ -377,6 +438,7 @@ module.exports = {
     carregarEventos,
     updateUser,
     deleteUser,
-    getPetsByUserId
+    getPetsByUserId,
+    envioImgUsuario
 
 }

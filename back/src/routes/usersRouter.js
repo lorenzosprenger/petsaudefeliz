@@ -22,7 +22,8 @@ const {
     eventoCalendario,
     carregarEventos,  
     deleteEventoCalendario,
-    getPetsByUserId
+    getPetsByUserId,
+    envioImgUsuario
 } = require('../controller/usersController')
 
 /**
@@ -193,5 +194,45 @@ router.delete('/user/:id/delete', deleteUser);
  *                type: object
  */
 router.get('/users/:id/pets', getPetsByUserId);
+
+/**
+ * @swagger
+ * /users/{id}/img/perfil:
+ *  put:
+ *    summary: Envio de imagem de perfil do usuário
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        required: true
+ *        description: ID do usuário
+ *        schema:
+ *          type: integer
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        multipart/form-data:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              img_perfil:
+ *                type: string
+ *                format: binary
+ *                description: Imagem de perfil do usuário
+ *    responses:
+ *      200:
+ *        description: Imagem de perfil atualizada com sucesso
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                success:
+ *                  type: boolean
+ *                message:
+ *                  type: string
+ *                data:
+ *                  type: object
+ */
+router.put('/users/:id/img/perfil', envioImgUsuario);
 
 module.exports = router;

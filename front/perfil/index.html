@@ -23,7 +23,7 @@
         <div class="container">
             <div class="edit-profile-container">
                 <h1>Editar Perfil</h1>
-                <form id="edit-profile-form">
+                <form id="edit-profile-form" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="name">Nome:</label>
                         <input type="text" id="name" name="name" required>
@@ -38,6 +38,11 @@
                             <input type="password" id="password" name="password" placeholder="Deixe vazio se não quiser mudar">
                             <button type="button" id="toggle-password">Mostrar</button>
                         </div>
+                    </div>
+                    <!-- Novo campo para upload de imagem -->
+                    <div class="form-group">
+                        <label for="img_perfil">Imagem de Perfil:</label>
+                        <input type="file" id="img_perfil" name="img_perfil" accept="image/*">
                     </div>
                     <div class="form-group">
                         <button type="submit" id="edit-button">Salvar Alterações</button>
