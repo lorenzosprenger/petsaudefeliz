@@ -19,6 +19,9 @@ const app = express();
 app.use(express.json());
 // Habilitar o recebimento de requests em formato JSON
 app.use(cors())
+
+app.use(fileUpload());
+
 // Habilitar as rotas na aplicação
 app.use('/api', router);
 // Habilitar o upload de arquivos

@@ -390,45 +390,52 @@ async function getPetsByUserId(request, response) {
     });
 }
 
-
+// Função envioImgUsuario com verificação para request.files
 async function envioImgUsuario(request, response) {
-    const img_perfil = request.files.img_perfil;
-    const imgPerfilNome = Date.now() + path.extname(img_perfil.name);
-  
-    const imgPerfilPath = path.join(__dirname, "..", "uploads", "img_perfil");
-  
-    img_perfil.mv(path.join(imgPerfilPath, imgPerfilNome), (erro) => {
-      if (erro) {
+    // Verifica se a imagem foi enviada
+    if (!request.files || !request.files.img_perfil) {
         return response.status(400).json({
-          success: false,
-          message: "Erro ao mover o arquivo."
+            success: false,
+            message: "Nenhum arquivo enviado. Por favor, envie uma imagem com o campo 'img_perfil'."
         });
-      } else {
-        const params = Array(
-            imgPerfilNome,
-          request.params.id
-        );
-  
+    }
+
+    const img_perfil = request.files.img_perfil;
+    const imgPerfilNome = Date.now() + path.extname(img_perfil.name); // Nome único para o arquivo
+    const imgPerfilPath = path.join(__dirname, "..", "uploads", "img_perfil");
+
+    // Move o arquivo para o diretório de upload
+    img_perfil.mv(path.join(imgPerfilPath, imgPerfilNome), (erro) => {
+        if (erro) {
+            return response.status(500).json({
+                success: false,
+                message: "Erro ao mover o arquivo.",
+                error: erro.message
+            });
+        }
+
+        // Atualiza o caminho da imagem no banco de dados
+        const params = [imgPerfilNome, request.params.id];
         const query = "UPDATE `usuarios` SET `img_perfil` = ? WHERE `id` = ?;";
-  
+
         connection.query(query, params, (err, results) => {
-          if (results) {
-            response.status(201).json({
-              success: true,
-              message: "Sucesso com o envio da imagem!!",
-              data: results
+            if (err) {
+                return response.status(500).json({
+                    success: false,
+                    message: "Erro ao atualizar o banco de dados.",
+                    error: err.message
+                });
+            }
+
+            response.status(200).json({
+                success: true,
+                message: "Imagem de perfil atualizada com sucesso.",
+                data: results
             });
-          } else {
-            response.status(400).json({
-              success: false,
-              message: "Ops, deu problemas com o envio da imagem!!",
-              data: err
-            });
-          }
         });
-      }
     });
-  }
+}
+
 module.exports = {
     listUsers,
     cadastroPet,

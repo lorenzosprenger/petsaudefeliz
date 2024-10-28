@@ -132,43 +132,34 @@ document.getElementById('edit-profile-form').addEventListener('submit', function
 });
 
 
-let botao = document.getElementById('edit-button');
+document.getElementById('edit-profile-form').addEventListener('submit', async (event) => {
+    event.preventDefault(); // Evita o comportamento padrão do formulário
 
-let img_perfil = null;
-botao.onclick = async function(e){
-    e.preventDefault()
-
-    let input_file = document.getElementById('img_perfil').value;
-    console.log(input_file);
-
-    let formData = new FormData();
-
-    if (img_perfil) {
-      console.log("Arquivo de imagem selecionado:", img_perfil);
-      formData.append("im", img_perfil);
-    }
+    const form = document.getElementById('edit-profile-form');
+    const formData = new FormData(form);
 
     console.log(formData);
+    try {
+        const response = await fetch(`http://localhost:1903/api/users/${userId}/img/perfil`, { // Coloque o ID do usuário certo
+            method: 'PUT',
+            body: formData
+        });
 
-    // PUT
-    // const response = await fetch(
-    //   `http://localhost:3000/api/users/${userId}/img/perfil`,
-    //   {
-    //     method: "PUT",
-    //     body: formData, // Enviando todos os dados e a imagem juntos
-    //   }
-    // );
 
-    // let content = await response.json();
-    // console.log(content);
+        // Verifica a resposta do servidor
+        if (!response.ok) {
+            throw new Error('Erro ao enviar a imagem. Código: ' + response.status);
+        }
 
-    // if(content.success) {
-    //     alert("funfou!");
-    // }
-    // else {
-    //     alert("deu merda!")
-    // }
-}
+        const result = await response.json();
+        console.log(result);    
+
+        // alert("Imagem enviada com sucesso!");
+    } catch (error) {
+        console.error("Erro ao fazer upload:", error);
+    }
+});
+
 
 
 // Chama a função para buscar os dados do perfil e dos pets quando a página é carregada
