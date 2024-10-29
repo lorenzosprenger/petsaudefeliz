@@ -92,3 +92,8 @@ table.exercise-table th {
 table.exercise-table tbody tr:nth-child(even) {
     background-color: #252020;
 }
+#foto-perfil{
+    width: 100px;
+    height: 100px;
+    border-radius: 100%;
+}

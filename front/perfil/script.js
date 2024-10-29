@@ -77,8 +77,8 @@ function fetchUserProfileAndPets() {
         .catch(error => console.error('Erro ao buscar os pets:', error));
 }
 
-// Função para enviar os dados editados do usuário para o backend
-document.getElementById('edit-profile-form').addEventListener('submit', function(event) {
+// Função para enviar os dados editados do usuário e a imagem de perfil para o backend
+document.getElementById('edit-profile-form').addEventListener('submit', async (event) => {
     event.preventDefault(); // Evita o comportamento padrão de recarregar a página
 
     if (!userId) {
@@ -100,69 +100,106 @@ document.getElementById('edit-profile-form').addEventListener('submit', function
     console.log('Dados enviados para atualização:', updatedData);
 
     // Chamada API para atualizar os dados do usuário
-    fetch(`http://localhost:3000/api/user/${userId}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(updatedData)
-    })
-    .then(response => {
-        if (!response.ok) {
-            // Log detalhado da resposta para debugar
-            return response.json().then(errData => {
-                console.error('Erro na resposta da API:', errData);
-                throw new Error(`Erro na atualização do perfil: ${response.status}`);
-            });
-        }
-        return response.json(); // Processa a resposta como JSON
-    })
-    .then(data => {
-        console.log('Resposta da API (atualização):', data); // Loga a resposta da API
-        if (data.success) {
-            alert('Perfil atualizado com sucesso!');
-        } else {
-            alert('Erro ao atualizar perfil: ' + data.message);
-        }
-    })
-    .catch(error => {
-        console.error('Erro ao atualizar perfil:', error);
-        alert('Houve um erro ao atualizar o perfil.');
-    });
-});
-
-
-document.getElementById('edit-profile-form').addEventListener('submit', async (event) => {
-    event.preventDefault(); // Evita o comportamento padrão do formulário
-
-    const form = document.getElementById('edit-profile-form');
-    const formData = new FormData(form);
-
-    console.log(formData);
     try {
-        const response = await fetch(`http://localhost:1903/api/users/${userId}/img/perfil`, { // Coloque o ID do usuário certo
+        const responseUserUpdate = await fetch(`http://localhost:3000/api/user/${userId}`, {
             method: 'PUT',
-            body: formData
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updatedData)
         });
 
-
-        // Verifica a resposta do servidor
-        if (!response.ok) {
-            throw new Error('Erro ao enviar a imagem. Código: ' + response.status);
+        if (!responseUserUpdate.ok) {
+            const errData = await responseUserUpdate.json();
+            console.error('Erro na resposta da API:', errData);
+            throw new Error(`Erro na atualização do perfil: ${responseUserUpdate.status}`);
         }
 
-        const result = await response.json();
-        console.log(result);    
+        const resultUserUpdate = await responseUserUpdate.json();
+        console.log('Resposta da API (atualização do usuário):', resultUserUpdate); // Loga a resposta da API
+        if (resultUserUpdate.success) {
+            alert('Perfil atualizado com sucesso!');
+        } else {
+            alert('Erro ao atualizar perfil: ' + resultUserUpdate.message);
+        }
+    } catch (error) {
+        console.error('Erro ao atualizar perfil:', error);
+        alert('Houve um erro ao atualizar o perfil.');
+        return; // Interrompe a execução caso ocorra um erro
+    }
 
-        // alert("Imagem enviada com sucesso!");
+    // Cria um FormData para enviar a imagem
+    const img_perfil = document.getElementById('img_perfil').files[0];
+    const formData = new FormData();
+    
+    if (img_perfil) {
+        formData.append("img_perfil", img_perfil); // Adiciona o arquivo ao FormData
+    } else {
+        console.error("Nenhuma imagem selecionada"); // Mensagem de erro caso o arquivo não esteja presente
+        return;
+    }
+    
+    console.log("Conteúdo do FormData:", formData.get("img_perfil"));
+
+    // Chamada API para enviar a imagem de perfil
+    try {
+        const responseImageUpdate = await fetch(`http://localhost:3000/api/users/${userId}/img/perfil`, {
+            method: 'PUT',
+            body: formData // FormData contém o arquivo de imagem
+        });
+    
+        if (!responseImageUpdate.ok) {
+            throw new Error('Erro ao enviar a imagem. Código: ' + responseImageUpdate.status);
+        }
+    
+        const resultImageUpdate = await responseImageUpdate.json();
+        console.log('Resposta da API (atualização da imagem):', resultImageUpdate);
+        alert("Imagem enviada com sucesso!");
+
+        
     } catch (error) {
         console.error("Erro ao fazer upload:", error);
-    }
+        alert('Houve um erro ao enviar a imagem.');
+    }    
 });
+
+
+// Função para carregar a imagem de perfil do usuário
+async function carregarImagemPerfil() {
+    const userId = localStorage.getItem('idUsuario'); // Obtém o ID do usuário
+
+    if (!userId) {
+        console.error('ID do usuário não encontrado no localStorage');
+        return;
+    }
+
+    try {
+        const response = await fetch(`http://localhost:3000/api/users/${userId}/buscar/img/perfil`);
+        if (!response.ok) {
+            throw new Error('Erro ao buscar a imagem de perfil');
+        }
+
+        const data = await response.json();
+        const imgPerfilUrl = data.imgPerfil;
+
+        if (imgPerfilUrl) {
+            // Define a URL completa da imagem de perfil no elemento HTML
+            document.getElementById('foto-perfil').src = imgPerfilUrl;
+        } else {
+            console.warn('Imagem de perfil não encontrada');
+        }
+    } catch (error) {
+        console.error('Erro ao carregar imagem de perfil:', error);
+    }
+}
+
+
 
 
 
 // Chama a função para buscar os dados do perfil e dos pets quando a página é carregada
 window.onload = function() {
+    carregarImagemPerfil();
     fetchUserProfileAndPets(); // Função para buscar o perfil e os pets
+
 };

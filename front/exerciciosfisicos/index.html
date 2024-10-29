@@ -11,8 +11,8 @@
     <header>
         <div class="sidebar">
             <div class="icon">
-                <a href="/front/perfil/index.html"><img src="/front/assets/Imagem Perfil Usuário 2.png" alt=""></a>
-            </div>
+                <a href="/front/perfil/index.html"><img src="" alt="Imagem de Perfil" id="foto-perfil"></a>
+                </div>
             <div class="icon-funcional">
                 <div class="icon">
                     <a href="/front/conteudoeducacional/index.html"><img src="/front/assets/educacional.png" alt=""></a>
@@ -79,36 +79,6 @@
             </tbody>
         </table>
     </main>
-    <script>
-        document.addEventListener('DOMContentLoaded', async () => {
-            const idPet = localStorage.getItem('idUsuario');
-
-            try {
-                const response = await fetch(`http://localhost:3002/plano_pet/${idPet}`);
-                const plan = await response.json();
-
-                if (plan.error) {
-                    alert('Erro ao buscar o plano de exercícios físicos: ' + plan.error);
-                    return;
-                }
-
-                const tableBody = document.getElementById('exercise-plan-table-body');
-                tableBody.innerHTML = ''; // Limpa o conteúdo existente
-
-                plan.exercisePlan.forEach(item => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${item.Dia}</td>
-                        <td>${item.Atividades}</td>
-                        <td>${item.Horário}</td>
-                    `;
-                    tableBody.appendChild(row);
-                });
-            } catch (error) {
-                console.error('Erro ao buscar o plano de exercícios físicos:', error);
-                alert('Erro ao buscar o plano de exercícios físicos: ' + error.message);
-            }
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>

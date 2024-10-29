@@ -23,7 +23,9 @@ const {
     carregarEventos,  
     deleteEventoCalendario,
     getPetsByUserId,
-    envioImgUsuario
+    envioImgUsuario,
+    buscarImagemPerfil,
+    
 } = require('../controller/usersController')
 
 /**
@@ -234,5 +236,53 @@ router.get('/users/:id/pets', getPetsByUserId);
  *                  type: object
  */
 router.put('/users/:id/img/perfil', envioImgUsuario);
+/**
+ * @swagger
+ * /users/{id}/img/perfil:
+ *  get:
+ *    summary: Busca a imagem de perfil de um usuário específico
+ *    description: Retorna o nome do arquivo da imagem de perfil de um usuário identificado pelo ID.
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        required: true
+ *        description: ID do usuário para buscar a imagem de perfil
+ *        schema:
+ *          type: integer
+ *    responses:
+ *      200:
+ *        description: Nome do arquivo de imagem de perfil do usuário
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                imgPerfil:
+ *                  type: string
+ *                  description: Nome do arquivo de imagem do perfil
+ *      404:
+ *        description: Usuário ou imagem de perfil não encontrado
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                error:
+ *                  type: string
+ *                  description: Mensagem de erro
+ *      500:
+ *        description: Erro no servidor
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                error:
+ *                  type: string
+ *                  description: Mensagem de erro detalhada
+ */
+router.get('/users/:id/buscar/img/perfil', buscarImagemPerfil);
+
+
 
 module.exports = router;

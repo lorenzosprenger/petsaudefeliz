@@ -215,3 +215,40 @@ document.addEventListener('DOMContentLoaded', () => {
     
         
 });
+
+
+// Função para carregar a imagem de perfil do usuário
+async function carregarImagemPerfil() {
+    const userId = localStorage.getItem('idUsuario'); // Obtém o ID do usuário
+
+    if (!userId) {
+        console.error('ID do usuário não encontrado no localStorage');
+        return;
+    }
+
+    try {
+        const response = await fetch(`http://localhost:3000/api/users/${userId}/buscar/img/perfil`);
+        if (!response.ok) {
+            throw new Error('Erro ao buscar a imagem de perfil');
+        }
+
+        const data = await response.json();
+        const imgPerfilUrl = data.imgPerfil;
+
+        if (imgPerfilUrl) {
+            // Define a URL completa da imagem de perfil no elemento HTML
+            document.getElementById('foto-perfil').src = imgPerfilUrl;
+        } else {
+            console.warn('Imagem de perfil não encontrada');
+        }
+    } catch (error) {
+        console.error('Erro ao carregar imagem de perfil:', error);
+    }
+}
+
+
+// Chama a função para buscar os dados do perfil e dos pets quando a página é carregada
+window.onload = function() {
+    carregarImagemPerfil();
+
+};

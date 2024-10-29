@@ -11,7 +11,8 @@
     <header>
         <div class="sidebar">
             <div class="icon">
-                <a href="/front/perfil/index.html"><img src="/front/assets/Imagem Perfil Usuário 2.png" alt=""></a>
+                <a href="/front/perfil/index.html"><img src="" alt="Imagem de Perfil" id="foto-perfil"></a>
+
             </div>
             <div class="icon-funcional">
                 <div class="icon">
@@ -87,37 +88,7 @@
             </tbody>
         </table>
     </main>
-    <script>
-        document.addEventListener('DOMContentLoaded', async () => {
-            const idPet = localStorage.getItem('idUsuario');
-
-            try {
-                const response = await fetch(`http://localhost:3002/plano_pet/${idPet}`);
-                const plan = await response.json();
-
-                if (plan.error) {
-                    alert('Erro ao buscar o plano alimentar: ' + plan.error);
-                    return;
-                }
-
-                const tableBody = document.getElementById('plan-table-body');
-                tableBody.innerHTML = ''; // Limpa o conteúdo existente
-
-                plan.plan.forEach(item => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${item.Dia}</td>
-                        <td>${item.Alimentação}</td>
-                        <td>${item.Soltura}</td>
-                        <td>${item.Recolhimento}</td>
-                    `;
-                    tableBody.appendChild(row);
-                });
-            } catch (error) {
-                console.error('Erro ao buscar o plano alimentar:', error);
-                alert('Erro ao buscar o plano alimentar: ' + error.message);
-            }
-        });
-    </script>
+    <script src="script.js"></script>
+    
 </body>
 </html>

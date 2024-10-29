@@ -207,3 +207,9 @@ input[type="password"]:focus {
     margin-bottom: 5px;
     color: var(--cor-fonte);
 }
+
+#foto-perfil{
+    width: 100px;
+    height: 100px;
+    border-radius: 100%;
+}
