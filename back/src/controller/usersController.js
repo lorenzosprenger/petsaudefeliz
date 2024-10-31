@@ -504,7 +504,9 @@ async function envioImgCavalo(request, response) {
 
 // Função para buscar a imagem do cavalo
 async function buscarImagemCavalo(req, res) {
+  console.log("Função buscarImagemCavalo chamada."); // Log para confirmar chamada da função
   const idpet = req.params.idpet;
+  console.log("ID do pet recebido:", idpet); // Log do ID do pet
 
   connection.query(
       'SELECT img_cavalo FROM pet WHERE idpet = ?',
@@ -515,25 +517,31 @@ async function buscarImagemCavalo(req, res) {
               return res.status(500).json({ error: 'Erro ao buscar imagem do cavalo no servidor' });
           }
 
-          if (!results || results.length === 0) {
+          console.log("Resultado da consulta ao banco de dados:", results); // Log do resultado da consulta
+
+          if (!results || results.length === 0 || !results[0].img_cavalo) {
+              console.warn(`Imagem do cavalo não encontrada para o pet com id ${idpet}`);
               return res.status(404).json({ error: 'Imagem do cavalo não encontrada' });
           }
 
-          // Obter o nome do arquivo de imagem do cavalo
           const imgCavalo = results[0].img_cavalo;
+          const imgCavaloPath = path.join(__dirname, "..", "uploads", "img_cavalo", imgCavalo);
 
-          // Construir a URL completa da imagem do cavalo
-          const imgCavaloUrl = `${req.protocol}://${req.get('host')}/uploads/img_cavalo/${imgCavalo}`;
+          console.log("Caminho completo da imagem do cavalo:", imgCavaloPath); // Log do caminho completo do arquivo
 
-          console.log("Imagem do cavalo encontrada:", imgCavaloUrl);
+          fs.access(imgCavaloPath, fs.constants.F_OK, (err) => {
+              if (err) {
+                  console.warn(`Arquivo de imagem do cavalo não encontrado no caminho ${imgCavaloPath}`);
+                  return res.status(404).json({ error: 'Arquivo de imagem do cavalo não encontrado no servidor' });
+              }
 
-          // Retornar a URL completa da imagem do cavalo
-          res.json({ imgCavalo: imgCavaloUrl });
+              const imgCavaloUrl = imgCavalo;
+              console.log("Imagem do cavalo encontrada:", imgCavaloUrl); // Log da URL completa da imagem
+              res.json({ imgCavalo: imgCavaloUrl });
+          });
       }
   );
 }
-
-
 
 module.exports = {
   listUsers,

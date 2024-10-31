@@ -328,7 +328,7 @@ router.get('/users/:id/buscar/img/perfil', buscarImagemPerfil);
  *       500:
  *         description: Erro ao salvar a imagem no servidor.
  */
-router.put('/api/pets/:idpet/img/cavalo', envioImgCavalo);
+router.put('/pets/:idpet/img/cavalo', envioImgCavalo);
 
 /**
  * @swagger
@@ -359,7 +359,7 @@ router.put('/api/pets/:idpet/img/cavalo', envioImgCavalo);
  *       500:
  *         description: Erro ao buscar a imagem do cavalo no servidor.
  */
-router.get('/api/pets/:idpet/buscar/img/cavalo', buscarImagemCavalo);
+router.get('/pets/:idpet/buscar/img/cavalo', buscarImagemCavalo);
 
 
 

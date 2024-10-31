@@ -78,24 +78,36 @@ async function carregarImagemCavalo() {
 
     try {
         const response = await fetch(`http://localhost:3000/api/pets/${idpet}/buscar/img/cavalo`);
+        
+        // Verifica se a resposta é ok (status 200)
         if (!response.ok) {
             throw new Error("Erro ao buscar a imagem do cavalo");
         }
 
         const data = await response.json();
-        const imgCavaloUrl = data.imgCavalo;
+        const imgCavaloNome = data.imgCavalo; // Nome da imagem retornada do banco
+        let imgCavaloUrl;
 
-        if (imgCavaloUrl) {
-            const cavaloImg = document.getElementById("foto-cavalo");
-            cavaloImg.src = imgCavaloUrl;
-            cavaloImg.style.display = "block";
+        console.log("Nome da imagem do cavalo:", imgCavaloNome);
+
+        // Verifica se a imagem existe e define o caminho correspondente
+        if (imgCavaloNome && imgCavaloNome !== "default.png") {
+            imgCavaloUrl = `/back/src/uploads/img_cavalo/${imgCavaloNome}`; // Caminho para a imagem do servidor
         } else {
-            console.warn("Imagem do cavalo não encontrada");
+            imgCavaloUrl = `/front/assets/default.png`; // Caminho para a imagem padrão
         }
+
+        console.log("URL da imagem do cavalo:", imgCavaloUrl);
+
+        // Define a URL da imagem no elemento HTML
+        const cavaloImg = document.getElementById("foto-cavalo");
+        cavaloImg.src = imgCavaloUrl;
+        cavaloImg.style.display = "block"; // Torna a imagem visível
     } catch (error) {
         console.error("Erro ao carregar imagem do cavalo:", error);
     }
 }
+
 
 // Função para exibir os nomes do pet e do dono
 const displayPetOwnerNames = () => {
@@ -120,14 +132,7 @@ const fetchBreedInfo = async (raca) => {
         document.getElementById("informacao").innerText = `Origem: ${breedInfo.Origem}\nNome original: ${breedInfo.NomeOriginal}`;
         document.getElementById("texto").innerText = breedInfo.Texto;
 
-        if (breedInfo.Imagem) {
-            const imageUrl = `/front/assets/${breedInfo.Imagem}`;
-            const imgElement = document.getElementById("imagem");
-            imgElement.src = imageUrl;
-            imgElement.style.display = "block";
-        } else {
-            document.getElementById("imagem").style.display = "none";
-        }
+        
     } catch (error) {
         console.error("Erro ao buscar informações da raça:", error);
         document.getElementById("informacao").innerText = "Erro ao buscar informações da raça";
