@@ -11,7 +11,7 @@
     --cor-principal: #dddd; /* Branco para modo claro */
     --cor-secundaria: #ff0000; /* Vermelho */
     --cor-texto: #000000; /* Preto para texto no modo claro */
-    
+}
 
 body {
     background-color: var(--cor-principal);

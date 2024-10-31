@@ -77,44 +77,52 @@ async function listUsers(request, response) {
 
 // Função que cria um novo usuário
 async function cadastroUsuario(request, response) {
-  // Preparar o comando de execução no banco
-  const query = "INSERT INTO usuarios(name, email, senha) VALUES(?, ?, ?);";
+  const { name, email, senha } = request.body;
+  let img_perfil;
 
-  // Recuperar os dados enviados na requisição
-  const params = Array(
-    request.body.name,
-    request.body.email,
-    request.body.senha
-  );
+  // Verifica se uma imagem foi enviada; caso contrário, define a imagem padrão
+  if (request.files && request.files.img_perfil && request.files.img_perfil !== "default") {
+      const imgFile = request.files.img_perfil;
+      img_perfil = Date.now() + path.extname(imgFile.name); // Nome único para a imagem
 
-  // Executa a ação no banco e valida os retornos para o client que realizou a solicitação
-  connection.query(query, params, (err, results) => {
-    try {
-      if (results) {
-        response.status(201).json({
-          success: true,
-          message: `Sucesso! Usuário cadastrado.`,
-          data: results,
-        });
-      } else {
-        response.status(400).json({
-          success: false,
-          message: `Não foi possível realizar o cadastro. Verifique os dados informados`,
-          query: err.sql,
-          sqlMessage: err.sqlMessage,
-        });
-      }
-    } catch (e) {
-      // Caso aconteça algum erro na execução
-      response.status(400).json({
-        succes: false,
-        message: "Ocorreu um erro. Não foi possível cadastrar usuário!",
-        query: err.sql,
-        sqlMessage: err.sqlMessage,
+      // Move a imagem para o diretório 'uploads/img_perfil'
+      const imgPath = path.join(__dirname, '..', 'uploads', 'img_perfil', img_perfil);
+      imgFile.mv(imgPath, (err) => {
+          if (err) {
+              return response.status(500).json({
+                  success: false,
+                  message: "Erro ao salvar imagem de perfil!",
+                  error: err.message
+              });
+          }
       });
-    }
+  } else {
+      // Define a imagem padrão quando o usuário não faz upload de uma imagem
+      img_perfil = 'Imagem Perfil Usuário 2.png'; // Nome da imagem padrão
+  }
+
+  // Executa a query para inserir o usuário no banco de dados com o nome da imagem
+  const query = "INSERT INTO usuarios (name, email, senha, img_perfil) VALUES (?, ?, ?, ?)";
+  const params = [name, email, senha, img_perfil];
+
+  connection.query(query, params, (err, results) => {
+      if (err) {
+          return response.status(400).json({
+              success: false,
+              message: "Erro ao cadastrar usuário",
+              error: err
+          });
+      }
+      response.status(201).json({
+          success: true,
+          message: "Usuário cadastrado com sucesso!",
+          data: results
+      });
   });
 }
+
+ 
+
 
 async function eventoCalendario(request, response) {
   // Preparar o comando de execução no banco
@@ -201,71 +209,58 @@ async function deleteEventoCalendario(request, response) {
   });
 }
 
-// Função que cria um novo pet
 async function cadastroPet(request, response) {
-  // Preparar o comando de execução no banco
-  const getAgeCategory = (birthDateString) => {
-    const today = new Date();
-    const birthDate = new Date(birthDateString);
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const monthDifference = today.getMonth() - birthDate.getMonth();
-    if (
-      monthDifference < 0 ||
-      (monthDifference === 0 && today.getDate() < birthDate.getDate())
-    ) {
-      age--;
-    }
-    if (age <= 4) {
-      return "Jovem";
-    } else if (age <= 15) {
-      return "Adulto";
+    const { nome, raca, data_nasc, genero, peso, nivel_atv, usuario_id } = request.body;
+    let img_cavalo;
+
+    // Verificar se uma imagem foi enviada; se não, usar uma imagem padrão
+    if (request.files && request.files.img_cavalo) {
+        const imgFile = request.files.img_cavalo;
+        img_cavalo = Date.now() + path.extname(imgFile.name); // Nome único para o arquivo
+
+        // Mover o arquivo para o diretório de upload
+        imgFile.mv(path.join(imgCavalo, img_cavalo), (erro) => {
+            if (erro) {
+                return response.status(500).json({
+                    success: false,
+                    message: "Erro ao salvar imagem do cavalo!",
+                    error: erro.message,
+                });
+            }
+        });
     } else {
-      return "Idoso";
+        // Se não houver imagem, definir uma imagem padrão com base na raça
+        const imgPadrao = {
+            "Crioulo": "Crioulo.png",
+            "Quarter Horse": "QuarterHorse.png",
+            "Mangalarga": "Mangalarga.png"
+        };
+        img_cavalo = imgPadrao[raca] || "default.png";
     }
-  };
 
-  const query =
-    "INSERT INTO pet( nome, raca, data_nasc, genero, peso, nivel_atv, usuario_id) VALUES( ?, ?, ?, ?, ?, ?, ?);";
+    const query = "INSERT INTO pet (nome, raca, data_nasc, genero, peso, nivel_atv, usuario_id, img_cavalo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    const params = [nome, raca, data_nasc, genero, peso, nivel_atv, usuario_id, img_cavalo];
 
-  // Recuperar os dados enviados na requisição
-  const params = Array(
-    request.body.nome,
-    request.body.raca,
-    request.body.data_nasc,
-    request.body.genero,
-    request.body.peso,
-    request.body.nivel_atv,
-    request.body.usuario_id
-  );
-
-  // Executa a ação no banco e valida os retornos para o client que realizou a solicitação
-  connection.query(query, params, (err, results) => {
-    try {
-      if (results) {
-        response.status(201).json({
-          success: true,
-          message: `Sucesso! Usuário cadastrado.`,
-          data: results,
-        });
-      } else {
-        response.status(400).json({
-          success: false,
-          message: `Não foi possível realizar o cadastro. Verifique os dados informados`,
-          query: err.sql,
-          sqlMessage: err.sqlMessage,
-        });
-      }
-    } catch (e) {
-      // Caso aconteça algum erro na execução
-      response.status(400).json({
-        succes: false,
-        message: "Ocorreu um erro. Não foi possível cadastrar usuário!",
-        query: err.sql,
-        sqlMessage: err.sqlMessage,
-      });
-    }
-  });
+    // Executa a query para inserir o cavalo no banco de dados
+    connection.query(query, params, (err, results) => {
+        if (results) {
+            response.status(201).json({
+                success: true,
+                message: "Sucesso! Pet cadastrado.",
+                data: results
+            });
+        } else {
+            response.status(400).json({
+                success: false,
+                message: "Não foi possível realizar o cadastro. Verifique os dados informados",
+                query: err.sql,
+                sqlMessage: err.sqlMessage
+            });
+        }
+    });
 }
+
+
 
 // Função que atualiza o usuário no banco
 async function updateUser(request, response) {
@@ -352,7 +347,7 @@ async function getPetsByUserId(request, response) {
   const userId = request.params.id; // O ID do usuário é passado como parâmetro na rota
 
   const query =
-    "SELECT nome, raca, data_nasc, genero, peso, nivel_atv FROM pet WHERE usuario_id = ?"; // Comando SQL para buscar os pets do usuário
+    "SELECT * FROM pet WHERE usuario_id = ?"; // Comando SQL para buscar os pets do usuário
 
   // Executa a consulta no banco de dados
   connection.query(query, [userId], (err, results) => {
@@ -448,7 +443,7 @@ async function buscarImagemPerfil(req, res) {
             const imgPerfil = results[0].img_perfil;
 
             // Construir a URL completa da imagem
-            const imgPerfilUrl = `/back/src/uploads/img_perfil/${imgPerfil}`;
+            const imgPerfilUrl = `${imgPerfil}`;
 
             console.log("Imagem de perfil encontrada:", imgPerfilUrl);
 
@@ -458,6 +453,85 @@ async function buscarImagemPerfil(req, res) {
     );
 }
 
+
+// Função para enviar a imagem do cavalo (endpoint PUT /api/pets/:idpet/img/cavalo)
+async function envioImgCavalo(request, response) {
+    const idpet = request.params.idpet;
+
+    if (!request.files || !request.files.img_cavalo) {
+        return response.status(400).json({
+            success: false,
+            message: "Arquivo de imagem do cavalo não enviado!",
+        });
+    }
+
+    const img_cavalo = request.files.img_cavalo;
+    const imgCavaloNome = Date.now() + path.extname(img_cavalo.name); // Nome único para o arquivo
+    const imgCavaloPath = path.join(imgCavalo, imgCavaloNome);
+
+    // Move o arquivo para o diretório de upload
+    img_cavalo.mv(imgCavaloPath, (erro) => {
+        if (erro) {
+            return response.status(500).json({
+                success: false,
+                message: "Erro ao salvar imagem do cavalo!",
+                error: erro.message,
+            });
+        } else {
+            // Atualiza o caminho da imagem no banco de dados
+            const query = "UPDATE pet SET img_cavalo = ? WHERE idpet = ?";
+            const params = [imgCavaloNome, idpet];
+
+            connection.query(query, params, (err, results) => {
+                if (err) {
+                    return response.status(400).json({
+                        success: false,
+                        message: "Erro ao atualizar dados no banco!",
+                        data: err,
+                    });
+                }
+                response.status(201).json({
+                    success: true,
+                    message: "Imagem do cavalo atualizada com sucesso!",
+                    data: results,
+                });
+            });
+        }
+    });
+}
+
+
+
+// Função para buscar a imagem do cavalo
+async function buscarImagemCavalo(req, res) {
+  const idpet = req.params.idpet;
+
+  connection.query(
+      'SELECT img_cavalo FROM pet WHERE idpet = ?',
+      [idpet],
+      (error, results) => {
+          if (error) {
+              console.error("Erro ao buscar imagem do cavalo:", error.message);
+              return res.status(500).json({ error: 'Erro ao buscar imagem do cavalo no servidor' });
+          }
+
+          if (!results || results.length === 0) {
+              return res.status(404).json({ error: 'Imagem do cavalo não encontrada' });
+          }
+
+          // Obter o nome do arquivo de imagem do cavalo
+          const imgCavalo = results[0].img_cavalo;
+
+          // Construir a URL completa da imagem do cavalo
+          const imgCavaloUrl = `${req.protocol}://${req.get('host')}/uploads/img_cavalo/${imgCavalo}`;
+
+          console.log("Imagem do cavalo encontrada:", imgCavaloUrl);
+
+          // Retornar a URL completa da imagem do cavalo
+          res.json({ imgCavalo: imgCavaloUrl });
+      }
+  );
+}
 
 
 
@@ -473,5 +547,7 @@ module.exports = {
   getPetsByUserId,
   envioImgUsuario,
   buscarImagemPerfil,
+  envioImgCavalo,
+  buscarImagemCavalo
   
 };

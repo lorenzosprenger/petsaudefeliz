@@ -1,115 +1,146 @@
-// Aguarda o carregamento completo do DOM antes de executar o código
-document.addEventListener('DOMContentLoaded', async () => {
-    // Função para buscar informações da raça a partir de uma API
-    const fetchBreedInfo = async (raca) => {
-        if (!raca) return; // Retorna se a raça não for fornecida
-
-        try {
-            // Constrói a URL da API usando a raça e codifica corretamente o parâmetro
-            const url = `http://localhost:3001/educacional/${encodeURIComponent(raca)}`;
-            console.log('URL da API:', url);
-
-            // Faz uma requisição para buscar informações da raça na API
-            const response = await fetch(url);
-            console.log('Resposta da API:', response);
-
-            // Verifica se a resposta não foi bem-sucedida
-            if (!response.ok) {
-                throw new Error('Erro na resposta da API');
-            }
-
-            // Converte a resposta da API para JSON
-            const breedInfo = await response.json();
-            console.log('Informações da raça recebidas:', breedInfo);
-
-            // Exibe as informações da raça na página
-            document.getElementById('informacao').innerText = `Origem: ${breedInfo.Origem}\nNome original: ${breedInfo.NomeOriginal}`;
-            document.getElementById('texto').innerText = breedInfo.Texto;
-
-            // Exibe a imagem da raça, se disponível
-            if (breedInfo.Imagem) {
-                const imageUrl = `/front/assets/${breedInfo.Imagem}`;
-                const imgElement = document.getElementById('imagem');
-                console.log(imageUrl);
-                imgElement.src = imageUrl; // Define a URL da imagem
-                imgElement.style.display = 'block'; // Exibe a imagem
-            } else {
-                document.getElementById('imagem').style.display = 'none'; // Esconde a imagem se não disponível
-            }
-        } catch (error) {
-            // Trata erros durante a busca das informações da raça
-            console.error('Erro ao buscar informações da raça:', error);
-            document.getElementById('informacao').innerText = 'Erro ao buscar informações da raça';
-            document.getElementById('texto').innerText = '';
-        }
-    };
-
-    // Função para exibir os nomes do pet e do dono
-    const displayPetOwnerNames = () => {
-        // Obtém o nome do pet e do dono do localStorage
-        const petName = localStorage.getItem('nomePet') || 'Nome do Pet não encontrado';
-        const ownerName = localStorage.getItem('nomeUsuario') || 'Nome do Dono não encontrado';
-        // Exibe os nomes na página
-        document.getElementById('petInfo').innerText = `Nome do Pet: ${petName}\nNome do Dono: ${ownerName}`;
-    };
-
-    // Obtém a raça do localStorage
-    let raca = localStorage.getItem('raca');
-    console.log('Raça obtida do localStorage:', raca);
-
-    // Busca as informações da raça e exibe os nomes do pet e do dono
-    await fetchBreedInfo(raca);
-    displayPetOwnerNames();
-
-    // Monitora mudanças no localStorage para atualizar a página em tempo real
-    window.addEventListener('storage', async (event) => {
-        if (event.key === 'raca') {
-            raca = event.newValue; // Atualiza a raça quando o localStorage mudar
-            console.log('Raça atualizada no localStorage:', raca);
-            await fetchBreedInfo(raca); // Busca e exibe as novas informações da raça
-        }
-        if (event.key === 'nomePet' || event.key === 'nomeDono') {
-            displayPetOwnerNames(); // Atualiza os nomes do pet e do dono quando o localStorage mudar
-        }
-    });
-});
-
 // Função para carregar a imagem de perfil do usuário
 async function carregarImagemPerfil() {
-    const userId = localStorage.getItem('idUsuario'); // Obtém o ID do usuário
+    const userId = localStorage.getItem("idUsuario");
 
     if (!userId) {
-        console.error('ID do usuário não encontrado no localStorage');
+        console.error("ID do usuário não encontrado no localStorage");
         return;
     }
 
     try {
         const response = await fetch(`http://localhost:3000/api/users/${userId}/buscar/img/perfil`);
         if (!response.ok) {
-            throw new Error('Erro ao buscar a imagem de perfil');
+            throw new Error("Erro ao buscar a imagem de perfil");
         }
 
         const data = await response.json();
-        const imgPerfilUrl = data.imgPerfil;
-
-        if (imgPerfilUrl) {
-            // Define a URL completa da imagem de perfil no elemento HTML
-            document.getElementById('foto-perfil').src = imgPerfilUrl;
+        const imgPerfilNome = data.imgPerfil;
+        let imgPerfilUrl;
+        console.log(imgPerfilNome)
+        // Verifica se a imagem é a padrão e define o caminho correspondente
+        if (imgPerfilNome === "Imagem Perfil Usuário 2.png") {
+            imgPerfilUrl = `/front/assets/${imgPerfilNome}`;
         } else {
-            console.warn('Imagem de perfil não encontrada');
+            imgPerfilUrl = `/back/src/uploads/img_perfil/${imgPerfilNome}`;
         }
+        console.log(imgPerfilUrl)
+
+        document.getElementById("foto-perfil").src = imgPerfilUrl;
     } catch (error) {
-        console.error('Erro ao carregar imagem de perfil:', error);
+        console.error("Erro ao carregar imagem de perfil:", error);
     }
 }
 
+// Função para enviar a imagem do cavalo
+async function uploadCavaloImage() {
+    const idpet = localStorage.getItem("idPet");
+    if (!idpet) {
+        console.error("ID do pet não encontrado no localStorage");
+        return;
+    }
 
+    const img_cavalo = document.getElementById("img_cavalo").files[0];
+    if (!img_cavalo) {
+        console.error("Nenhuma imagem do cavalo selecionada");
+        return;
+    }
 
+    const formData = new FormData();
+    formData.append("img_cavalo", img_cavalo);
 
+    try {
+        const response = await fetch(`http://localhost:3000/api/pets/${idpet}/img/cavalo`, {
+            method: "PUT",
+            body: formData,
+        });
 
-// Chama a função para buscar os dados do perfil e dos pets quando a página é carregada
-window.onload = function() {
+        if (!response.ok) {
+            throw new Error("Erro ao enviar a imagem do cavalo");
+        }
+
+        const result = await response.json();
+        console.log("Resposta da API (atualização da imagem do cavalo):", result);
+        alert("Imagem do cavalo enviada com sucesso!");
+        carregarImagemCavalo();
+    } catch (error) {
+        console.error("Erro ao enviar a imagem do cavalo:", error);
+    }
+}
+
+// Função para carregar a imagem do cavalo
+async function carregarImagemCavalo() {
+    const idpet = localStorage.getItem("idPet");
+
+    if (!idpet) {
+        console.error("ID do pet não encontrado no localStorage");
+        return;
+    }
+
+    try {
+        const response = await fetch(`http://localhost:3000/api/pets/${idpet}/buscar/img/cavalo`);
+        if (!response.ok) {
+            throw new Error("Erro ao buscar a imagem do cavalo");
+        }
+
+        const data = await response.json();
+        const imgCavaloUrl = data.imgCavalo;
+
+        if (imgCavaloUrl) {
+            const cavaloImg = document.getElementById("foto-cavalo");
+            cavaloImg.src = imgCavaloUrl;
+            cavaloImg.style.display = "block";
+        } else {
+            console.warn("Imagem do cavalo não encontrada");
+        }
+    } catch (error) {
+        console.error("Erro ao carregar imagem do cavalo:", error);
+    }
+}
+
+// Função para exibir os nomes do pet e do dono
+const displayPetOwnerNames = () => {
+    const petName = localStorage.getItem("nomePet") || "Nome do Pet não encontrado";
+    const ownerName = localStorage.getItem("nomeUsuario") || "Nome do Dono não encontrado";
+    document.getElementById("petInfo").innerText = `Nome do Pet: ${petName}\nNome do Dono: ${ownerName}`;
+};
+
+// Função para buscar informações da raça a partir de uma API
+const fetchBreedInfo = async (raca) => {
+    if (!raca) return;
+
+    try {
+        const url = `http://localhost:3001/educacional/${encodeURIComponent(raca)}`;
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error("Erro na resposta da API");
+        }
+
+        const breedInfo = await response.json();
+        document.getElementById("informacao").innerText = `Origem: ${breedInfo.Origem}\nNome original: ${breedInfo.NomeOriginal}`;
+        document.getElementById("texto").innerText = breedInfo.Texto;
+
+        if (breedInfo.Imagem) {
+            const imageUrl = `/front/assets/${breedInfo.Imagem}`;
+            const imgElement = document.getElementById("imagem");
+            imgElement.src = imageUrl;
+            imgElement.style.display = "block";
+        } else {
+            document.getElementById("imagem").style.display = "none";
+        }
+    } catch (error) {
+        console.error("Erro ao buscar informações da raça:", error);
+        document.getElementById("informacao").innerText = "Erro ao buscar informações da raça";
+        document.getElementById("texto").innerText = "";
+    }
+};
+
+// Inicialização ao carregar a página
+window.onload = function () {
     carregarImagemPerfil();
+    carregarImagemCavalo();
+    displayPetOwnerNames();
 
-
+    const raca = localStorage.getItem("raca");
+    fetchBreedInfo(raca);
 };

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,7 +11,8 @@
     <header>
         <div class="sidebar">
             <div class="icon">
-                <a href="/front/perfil/index.html"><img src="" alt="Imagem de Perfil" id="foto-perfil">
+                <a href="/front/perfil/index.html">
+                    <img src="" alt="Imagem de Perfil" id="foto-perfil">
                 </a>
             </div>
             <div class="icon-funcional">
@@ -38,7 +39,10 @@
                 <h3 class="informacao" id="informacao"></h3>
                 <div class="borda">
                     <img id="imagem" src="" alt="Imagem da raça" style="display:none;">
+                    <input type="file" id="img_cavalo" name="img_cavalo" accept="image/*">
+                    <button type="button" onclick="uploadCavaloImage()">Enviar Imagem do Cavalo</button>
                 </div>
+                <img id="foto-cavalo" src="" alt="Imagem do Cavalo" style="display: none;">
             </div>
             <div class="conteudo-texto">
                 <p class="texto" id="texto"></p>

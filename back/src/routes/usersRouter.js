@@ -25,6 +25,8 @@ const {
     getPetsByUserId,
     envioImgUsuario,
     buscarImagemPerfil,
+    envioImgCavalo,
+    buscarImagemCavalo
     
 } = require('../controller/usersController')
 
@@ -282,6 +284,82 @@ router.put('/users/:id/img/perfil', envioImgUsuario);
  *                  description: Mensagem de erro detalhada
  */
 router.get('/users/:id/buscar/img/perfil', buscarImagemPerfil);
+
+/**
+ * @swagger
+ * /api/pets/{idpet}/img/cavalo:
+ *   put:
+ *     summary: Faz o upload da imagem do cavalo para um pet específico.
+ *     description: Permite que o usuário envie uma imagem do cavalo para um registro específico na tabela pet.
+ *     parameters:
+ *       - in: path
+ *         name: idpet
+ *         required: true
+ *         description: ID do pet (idpet) que identifica o cavalo.
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               img_cavalo:
+ *                 type: string
+ *                 format: binary
+ *                 description: Arquivo de imagem do cavalo a ser enviado.
+ *     responses:
+ *       201:
+ *         description: Imagem do cavalo enviada com sucesso.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ *                 data:
+ *                   type: object
+ *       400:
+ *         description: Erro de validação ou imagem não enviada.
+ *       500:
+ *         description: Erro ao salvar a imagem no servidor.
+ */
+router.put('/api/pets/:idpet/img/cavalo', envioImgCavalo);
+
+/**
+ * @swagger
+ * /api/pets/{idpet}/buscar/img/cavalo:
+ *   get:
+ *     summary: Retorna a URL da imagem do cavalo de um pet específico.
+ *     description: Permite recuperar o link direto para a imagem do cavalo armazenada para um pet específico.
+ *     parameters:
+ *       - in: path
+ *         name: idpet
+ *         required: true
+ *         description: ID do pet (idpet) que identifica o cavalo.
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: URL da imagem do cavalo retornada com sucesso.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 imgCavalo:
+ *                   type: string
+ *                   description: URL completa da imagem do cavalo.
+ *       404:
+ *         description: Imagem do cavalo não encontrada.
+ *       500:
+ *         description: Erro ao buscar a imagem do cavalo no servidor.
+ */
+router.get('/api/pets/:idpet/buscar/img/cavalo', buscarImagemCavalo);
 
 
 

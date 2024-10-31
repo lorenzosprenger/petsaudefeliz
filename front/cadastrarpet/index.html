@@ -9,28 +9,32 @@
 </head>
 <body>
     <main>
-        
         <img src="/front/assets/logoPETSAUDEFELIZ.png" alt="logoPETSAUDEFELIZ" class="logo">
         <div class="red"></div>
         <div class="form">
             <h1>Criar perfil do PET</h1>
-            
+
+            <!-- Adição do campo de upload de imagem do cavalo -->
             <div class="input-container">
-                <input type="text" placeholder="Nome" id="nome" required/>
+                <label for="img_cavalo">Foto do Cavalo (opcional):</label>
+                <input type="file" id="img_cavalo" accept="image/*">
             </div>
-            <!-- <div class="input-container">
-                <input type="text" placeholder="Raça" id="raca" required/>
-            </div> -->
 
             <div class="input-container">
-                <div id="teste" class="dropdown-trigger">Raça <select name="raca" id="raca"><option value="Crioulo">Crioulo</option>
-                    <option value="Mangalarga">Mangalarga</option>
-                    <option value="Quarter Horse">Quarter Horse</option></select>
+                <input type="text" placeholder="Nome" id="nome" required />
+            </div>
+            <div class="input-container">
+                <div id="teste" class="dropdown-trigger">
+                    Raça 
+                    <select name="raca" id="raca">
+                        <option value="Crioulo">Crioulo</option>
+                        <option value="Mangalarga">Mangalarga</option>
+                        <option value="Quarter Horse">Quarter Horse</option>
+                    </select>
                 </div>
-
             </div>
             <div class="input-container">
-                <input type="date" placeholder="Data de nascimento" id="data_nasc" required/>
+                <input type="date" placeholder="Data de nascimento" id="data_nasc" required />
             </div>
             <div class="input-container">
                 <select id="genero" name="Gênero">
@@ -39,23 +43,24 @@
                 </select>
             </div>
             <div class="input-container">
-                <input type="number" placeholder="Peso (Kg)" id="peso" required/>
+                <input type="number" placeholder="Peso (Kg)" id="peso" required />
             </div>
             <div class="input-container">
-                <div id="teste" class="dropdown-trigger">Nível de atividade <select name="nivelAtividade" id="nivel_atv"><option value="Baixo">Baixo</option>
-                    <option value="Moderado">Moderado</option>
-                    <option value="Alto">Alto</option></select>
+                <div id="teste" class="dropdown-trigger">
+                    Nível de atividade 
+                    <select name="nivelAtividade" id="nivel_atv">
+                        <option value="Baixo">Baixo</option>
+                        <option value="Moderado">Moderado</option>
+                        <option value="Alto">Alto</option>
+                    </select>
                 </div>
-
             </div>
 
             <button id="criar" type="submit">Criar</button>
-            <a id="possuiconta" href="/front/conteudoeducacional/index.html">Já tenho perfil do pet</a>
+            <a id="possuiconta" href="/front/selecionarPet/index.html">Já tenho perfil do pet</a>
         </div>
-        
     </main>
     <script type="module" src="script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 </body>
 </html>

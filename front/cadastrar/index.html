@@ -4,29 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PETSAUDEFELIZ</title>
-    <link rel="shortcut icon" href="/front/assets/logoPETSAUDEFELIZ.png" type="image/x-icon">
+    <link rel="shortcut icon" href="../assets/logoPETSAUDEFELIZ.png" type="image/x-icon">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <main>
-        
         <img src="../assets/logoPETSAUDEFELIZ.png" alt="logoPETSAUDEFELIZ" class="logo">
         <div class="red"></div>
         <div class="form">
             <h1>CADASTRAR</h1>
-            <form class="cadastroForm">
-
+            <form class="cadastroForm" enctype="multipart/form-data">
                 <input type="text" placeholder="Username" id="name" required/>
                 <input type="email" placeholder="Email" id="email" required/>
                 <input type="password" placeholder="Password" id="senha" required/>
-                <button id="botao_cadastrar" type="submit" id="cadastrar">Cadastrar</button>
+                
+                <!-- Campo para selecionar uma imagem de perfil -->
+                <label for="img_perfil">Escolha uma imagem de perfil (opcional):</label>
+                <input type="file" id="img_perfil" name="img_perfil" accept="image/*">
+                
+                <button id="botao_cadastrar" type="submit">Cadastrar</button>
             </form>
             <a href="/front/login/index.html">Já tem conta? Login</a>
-
         </div>
     </main>
     <script src="script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 </body>
 </html>
