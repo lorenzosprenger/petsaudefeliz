@@ -23,41 +23,51 @@ document.addEventListener('DOMContentLoaded', async () => {
         return `${dia}/${mes}/${ano}`;
     }
 
-    // Função para carregar os perfis dos cavalos cadastrados
-    async function carregarPets() {
-        const response = await fetch(`http://localhost:3000/api/users/${userId}/pets`);
-        const result = await response.json();
+// Função para carregar os perfis dos cavalos cadastrados
+async function carregarPets() {
+    const response = await fetch(`http://localhost:3000/api/users/${userId}/pets`);
+    const result = await response.json();
 
-        if (result.success && result.pets.length > 0) {
-            result.pets.forEach(pet => {
-                const idade = calcularIdade(pet.data_nasc);
-                const dataFormatada = formatarData(pet.data_nasc);
-
-                const petDiv = document.createElement('div');
-                petDiv.classList.add('pet-profile');
-                petDiv.innerHTML = `
-                    <img src="/front/assets/${pet.img_cavalo}" alt="Foto do cavalo">
-                    <div class="pet-info">
-                        <h3>${pet.nome}</h3>
-                        <p><strong>Raça:</strong> ${pet.raca}</p>
-                        <p><strong>Data de Nascimento:</strong> ${dataFormatada} <strong>(Idade: ${idade} anos)</strong></p>
-                        <p><strong>Gênero:</strong> ${pet.genero}</p>
-                        <p><strong>Peso:</strong> ${pet.peso} kg</p>
-                        <p><strong>Nível de Atividade:</strong> ${pet.nivel_atv}</p>
-                    </div>
-                `;
-                petDiv.onclick = () => selecionarPet(pet);
-                petContainer.appendChild(petDiv);
-            });
-        } else {
-            Swal.fire({
-                icon: "info",
-                title: "Nenhum perfil encontrado",
-                text: "Você ainda não cadastrou nenhum cavalo.",
-                showConfirmButton: true
-            });
-        }
+    if (result.success && result.pets.length > 0) {
+        result.pets.forEach(pet => {
+            const idade = calcularIdade(pet.data_nasc);
+            const dataFormatada = formatarData(pet.data_nasc);
+            
+            // Define o caminho da imagem com base no nome da imagem
+            let imgCavaloPath;
+            if (pet.img_cavalo === "Crioulo.png" || pet.img_cavalo === "Mangalarga.png" || pet.img_cavalo === "QuarterHorse.png") {
+                imgCavaloPath = `/front/assets/${pet.img_cavalo}`;
+            } else {
+                imgCavaloPath = `/back/src/uploads/img_cavalo/${pet.img_cavalo}`;
+            }
+            
+            const petDiv = document.createElement('div');
+            petDiv.classList.add('pet-profile');
+            petDiv.innerHTML = `
+                <img src="${imgCavaloPath}" alt="Foto do cavalo">
+                <div class="pet-info">
+                    <h3>${pet.nome}</h3>
+                    <p><strong>Raça:</strong> ${pet.raca}</p>
+                    <p><strong>Data de Nascimento:</strong> ${dataFormatada} <strong>(Idade: ${idade} anos)</strong></p>
+                    <p><strong>Gênero:</strong> ${pet.genero}</p>
+                    <p><strong>Peso:</strong> ${pet.peso} kg</p>
+                    <p><strong>Nível de Atividade:</strong> ${pet.nivel_atv}</p>
+                </div>
+            `;
+            
+            petDiv.onclick = () => selecionarPet(pet);
+            petContainer.appendChild(petDiv);
+        });
+    } else {
+        Swal.fire({
+            icon: "info",
+            title: "Nenhum perfil encontrado",
+            text: "Você ainda não cadastrou nenhum cavalo.",
+            showConfirmButton: true
+        });
     }
+}
+
 
     // Função para armazenar o cavalo selecionado e mostrar as informações de confirmação
     function selecionarPet(pet) {
