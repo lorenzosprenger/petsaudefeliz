@@ -91,11 +91,11 @@ async function carregarImagemCavalo() {
 
         console.log("Nome da imagem do cavalo:", imgCavaloNome);
 
-        // Verifica se a imagem existe e define o caminho correspondente
-        if (imgCavaloNome && imgCavaloNome !== "default.png") {
+        // Verifica se a imagem não é uma das imagens padrão e define o caminho correspondente
+        if (imgCavaloNome !== "Mangalarga.png" && imgCavaloNome !== "Crioulo.png" && imgCavaloNome !== "QuarterHorse.png") {
             imgCavaloUrl = `/back/src/uploads/img_cavalo/${imgCavaloNome}`; // Caminho para a imagem do servidor
         } else {
-            imgCavaloUrl = `/front/assets/default.png`; // Caminho para a imagem padrão
+            imgCavaloUrl = `/front/assets/${imgCavaloNome}`; // Caminho para a imagem padrão
         }
 
         console.log("URL da imagem do cavalo:", imgCavaloUrl);

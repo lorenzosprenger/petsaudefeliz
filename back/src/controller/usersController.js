@@ -525,9 +525,18 @@ async function buscarImagemCavalo(req, res) {
           }
 
           const imgCavalo = results[0].img_cavalo;
-          const imgCavaloPath = path.join(__dirname, "..", "uploads", "img_cavalo", imgCavalo);
 
-          console.log("Caminho completo da imagem do cavalo:", imgCavaloPath); // Log do caminho completo do arquivo
+          // Verifica se a imagem é uma das pré-definidas no diretório `front/assets`
+          const imagensFront = ["Mangalarga.png", "Crioulo.png", "QuarterHorse.png"];
+          let imgCavaloPath;
+
+          if (imagensFront.includes(imgCavalo)) {
+              imgCavaloPath = path.join(__dirname, "..", "..", "..", "front", "assets", imgCavalo);
+              console.log("Imagem padrão encontrada no diretório front/assets:", imgCavaloPath);
+          } else {
+              imgCavaloPath = path.join(__dirname, "..", "uploads", "img_cavalo", imgCavalo);
+              console.log("Caminho completo da imagem do cavalo:", imgCavaloPath); // Log do caminho completo do arquivo
+          }
 
           fs.access(imgCavaloPath, fs.constants.F_OK, (err) => {
               if (err) {
