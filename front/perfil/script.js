@@ -13,7 +13,6 @@ document.getElementById('toggle-password').addEventListener('click', function ()
     }
 });
 
-
 // Função para buscar as informações do usuário e os pets do backend
 function fetchUserProfileAndPets() {
     if (!userId) {
@@ -27,14 +26,11 @@ function fetchUserProfileAndPets() {
         .then(data => {
             console.log('Dados dos usuários recebidos:', data); // Verificar o retorno
 
-            // Encontrar o usuário específico com base no ID salvo no localStorage
             const usuario = data.data.find(user => user.id === parseInt(userId));
 
             if (usuario) {
-                // Preencher os campos com os dados do usuário
                 document.getElementById('name').value = usuario.name || '';
                 document.getElementById('email').value = usuario.email || '';
-                // O campo de senha não é preenchido por segurança
             } else {
                 console.error('Usuário não encontrado');
             }
@@ -47,22 +43,30 @@ function fetchUserProfileAndPets() {
         .then(data => {
             console.log('Dados dos pets recebidos:', data);
 
-            // Exibir a lista de pets
             const petsList = document.getElementById('pets-list');
             petsList.innerHTML = ''; // Limpa a lista de pets anterior
 
-            if (data.pets.length === 0) {
+            const petSelect = document.getElementById('pet-select');
+            petSelect.innerHTML = '<option value="">Selecione um pet</option>';
+
+            const pets = data.pets;
+
+            if (pets.length === 0) {
                 petsList.innerHTML = '<p>Nenhum pet cadastrado.</p>';
             } else {
-                data.pets.forEach(pet => {
+                pets.forEach(pet => {
+                    console.log('Dados completos do pet:', pet);
+
+                    const petId = pet.idpet;
+                    const petNome = pet.nome;
+
                     const petItem = document.createElement('div');
                     petItem.classList.add('pet-item');
 
-                    // Formatar a data de nascimento
                     const dataNascimento = new Date(pet.data_nasc).toLocaleDateString('pt-BR');
 
                     petItem.innerHTML = `
-                        <strong>Nome:</strong> ${pet.nome} <br>
+                        <strong>Nome:</strong> ${petNome} <br>
                         <strong>Raça:</strong> ${pet.raca} <br>
                         <strong>Data de Nascimento:</strong> ${dataNascimento} <br>
                         <strong>Gênero:</strong> ${pet.genero} <br>
@@ -71,11 +75,97 @@ function fetchUserProfileAndPets() {
                     `;
 
                     petsList.appendChild(petItem);
+
+                    const option = document.createElement('option');
+                    option.value = petId;
+                    option.textContent = petNome;
+                    petSelect.appendChild(option);
                 });
             }
+
+            // Evento de mudança para exibir detalhes do pet selecionado
+            petSelect.addEventListener('change', function () {
+                const selectedPetId = petSelect.value;
+                console.log('ID do pet selecionado:', selectedPetId);
+
+                if (selectedPetId && selectedPetId !== 'undefined') {
+                    const selectedPet = pets.find(pet => pet.idpet == selectedPetId);
+
+                    if (selectedPet) {
+                        console.log('Pet selecionado:', selectedPet.nome);
+
+                        // Chama a função para armazenar o pet selecionado
+                        selecionarPet(selectedPet);
+
+                        petsList.innerHTML = `
+                            <div class="pet-item">
+                                <strong>Nome:</strong> ${selectedPet.nome} <br>
+                                <strong>Raça:</strong> ${selectedPet.raca} <br>
+                                <strong>Data de Nascimento:</strong> ${new Date(selectedPet.data_nasc).toLocaleDateString('pt-BR')} <br>
+                                <strong>Gênero:</strong> ${selectedPet.genero} <br>
+                                <strong>Peso:</strong> ${selectedPet.peso} kg <br>
+                                <strong>Nível de Atividade:</strong> ${selectedPet.nivel_atv}
+                            </div>
+                        `;
+                    } else {
+                        console.error('Pet não encontrado com o ID selecionado:', selectedPetId);
+                    }
+                } else {
+                    petsList.innerHTML = '';
+                    pets.forEach(pet => {
+                        const petItem = document.createElement('div');
+                        petItem.classList.add('pet-item');
+
+                        const dataNascimento = new Date(pet.data_nasc).toLocaleDateString('pt-BR');
+
+                        petItem.innerHTML = `
+                            <strong>Nome:</strong> ${pet.nome} <br>
+                            <strong>Raça:</strong> ${pet.raca} <br>
+                            <strong>Data de Nascimento:</strong> ${dataNascimento} <br>
+                            <strong>Gênero:</strong> ${pet.genero} <br>
+                            <strong>Peso:</strong> ${pet.peso} kg <br>
+                            <strong>Nível de Atividade:</strong> ${pet.nivel_atv}
+                        `;
+
+                        petsList.appendChild(petItem);
+                    });
+                }
+            });
         })
         .catch(error => console.error('Erro ao buscar os pets:', error));
 }
+
+// Função para armazenar o cavalo selecionado e mostrar as informações de confirmação
+function selecionarPet(pet) {
+    localStorage.setItem('idPet', pet.idpet);
+    localStorage.setItem('nomePet', pet.nome);
+    localStorage.setItem('raca', pet.raca);
+    localStorage.setItem('dataNascPet', formatarData(pet.data_nasc));
+    localStorage.setItem('idadePet', calcularIdade(pet.data_nasc));
+    localStorage.setItem('generoPet', pet.genero);
+    localStorage.setItem('pesoPet', pet.peso);
+    localStorage.setItem('nivelAtvPet', pet.nivel_atv);
+    localStorage.setItem('imgCavaloPet', pet.img_cavalo);
+}
+
+// Função para formatar a data de nascimento
+function formatarData(data) {
+    const date = new Date(data);
+    return date.toLocaleDateString('pt-BR');
+}
+
+// Função para calcular a idade do pet
+function calcularIdade(dataNascimento) {
+    const nascimento = new Date(dataNascimento);
+    const hoje = new Date();
+    let idade = hoje.getFullYear() - nascimento.getFullYear();
+    const mes = hoje.getMonth() - nascimento.getMonth();
+    if (mes < 0 || (mes === 0 && hoje.getDate() < nascimento.getDate())) {
+        idade--;
+    }
+    return idade;
+}
+
 
 // Função para enviar os dados editados do usuário e a imagem de perfil para o backend
 document.getElementById('edit-profile-form').addEventListener('submit', async (event) => {

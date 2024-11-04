@@ -53,8 +53,14 @@
             <!-- Espaço para exibir os pets cadastrados -->
             <div class="pets-profile-container">
                 <h2>Meus Pets</h2>
+                <div class="pet-selector">
+                    <select id="pet-select" class="pet-select">
+                        <option value="">Selecione um pet</option>
+                        <!-- As opções serão preenchidas dinamicamente via JavaScript -->
+                    </select>
+                </div>
                 <div id="pets-list">
-                    <!-- Perfis dos pets serão inseridos aqui via JavaScript -->
+                    <!-- Informações do pet selecionado serão exibidas aqui -->
                 </div>
             </div>
         </div>

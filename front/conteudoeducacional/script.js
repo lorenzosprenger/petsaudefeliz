@@ -1,3 +1,4 @@
+
 // Função para carregar a imagem de perfil do usuário
 async function carregarImagemPerfil() {
     const userId = localStorage.getItem("idUsuario");

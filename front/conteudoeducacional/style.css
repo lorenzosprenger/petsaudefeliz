@@ -90,7 +90,7 @@ main {
 
 .borda {
     margin: 10px;
-    border-radius: 40%;
+    border-radius: 35%;
     background-color: rgb(255, 255, 255);
 }
 
@@ -121,4 +121,42 @@ main {
     width: 50vw;
     height: 50vh;
     border-radius: 40%;
+}
+
+/* Container para alinhar os botões de upload e o campo de seleção de arquivos */
+.upload-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px; /* Espaço entre a imagem e os botões */
+}
+
+#img_cavalo {
+    background-color: var(--cor-principal);
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+    margin-bottom: 8px; /* Espaço entre o campo de arquivo e o botão */
+    width: 80%; /* Ajusta a largura para ocupar 80% do container */
+    text-align: center;
+}
+
+button {
+    background-color: #ff0000;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1em;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 80%; /* Ajusta a largura para combinar com o campo de arquivo */
+}
+
+button:hover {
+    background-color: #db0202;
 }
