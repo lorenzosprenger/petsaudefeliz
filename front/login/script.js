@@ -15,7 +15,7 @@ button.onclick = async function (e) {
     let data = { email, senha }
 
     // Envia uma requisição GET para o servidor na rota '/api/users/listUsers'
-    const response = await fetch('http://localhost:3000/api/users/listUsers', {
+    const response = await fetch('https://petsaudefeliz.vercel.app:3000/api/users/listUsers', {
         method: "GET", // Define o método da requisição como GET
         headers: { "Content-type": "application/json;charset=UTF-8" } // Define o cabeçalho da requisição, especificando que o conteúdo é JSON
     });
