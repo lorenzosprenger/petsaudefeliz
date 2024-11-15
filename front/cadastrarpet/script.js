@@ -49,6 +49,7 @@ butao.onclick = async function (e) {
             timer: 1500
         });
         return;
+        
     }
 
     // Define imagem padrão com base na raça, caso o usuário não selecione uma imagem

@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const usuarioId = localStorage.getItem("idUsuario");
     renderizarCalendario();
     carregarEventos(); // Função que busca e exibe os eventos
-    console.log(localStorage.getItem('idUsuario'));
 
     function renderizarCalendario() {
         const nomesMeses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
@@ -169,8 +168,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function adicionarEventoNaLista(textoEvento, dataEvento, idEvento) {
         const listItem = document.createElement('li');
-        listItem.textContent = `${dataEvento}: ${textoEvento}`;
-    
+        
+        // Formatar a data para o formato DD/MM/YYYY
+        const data = new Date(dataEvento);
+        const dia = String(data.getDate()).padStart(2, '0'); // Adiciona zero à esquerda se necessário
+        const mes = String(data.getMonth() + 1).padStart(2, '0'); // Meses começam do zero
+        const ano = data.getFullYear();
+        const dataFormatada = `${dia}/${mes}/${ano}`;
+
+        listItem.textContent = `${dataFormatada}: ${textoEvento}`;
+
         // Cria o botão de excluir
         const deleteButton = document.createElement('button');
         deleteButton.textContent = 'Excluir';

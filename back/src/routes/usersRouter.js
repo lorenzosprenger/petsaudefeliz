@@ -18,7 +18,7 @@ const {
     cadastroPet,
     cadastroUsuario,
     updateUser,
-    deleteUser,
+    deletePet,
     eventoCalendario,
     carregarEventos,  
     deleteEventoCalendario,
@@ -173,7 +173,7 @@ router.put('/user/:id', updateUser);
  *            schema:
  *              type: object
  */
-router.delete('/user/:id/delete', deleteUser);
+router.delete('/pet/:idpet/delete', deletePet);
 
 /**
  * @swagger

@@ -65,6 +65,12 @@ h1 {
     color: #ffffff;
 }
 
+.pet-profile:hover .pet-info h3 {
+    color: var(--cor-principal);
+    font-size: 1.5em;
+    margin: 0.5em 0;
+}
+
 .pet-profile img {
     width: 100%;
     height: 180px;
@@ -82,6 +88,8 @@ h1 {
     font-size: 1.5em;
     margin: 0.5em 0;
 }
+
+
 
 .pet-info p {
     margin: 0.5em 0;

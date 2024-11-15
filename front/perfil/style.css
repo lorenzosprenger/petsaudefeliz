@@ -18,6 +18,7 @@
 body {
     background-color: var(--cor-principal);
     font-family: 'Arial', sans-serif;
+    overflow: hidden;
 }
 
 main {
@@ -259,4 +260,40 @@ input[type="password"]:focus {
 .selected-pet:hover {
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.delete-pet-button {
+    background-color: #ff4040;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    margin-top: 10px;
+}
+
+.delete-pet-button:hover {
+    background-color: #d13333;
+}
+
+
+#register-equine-button {
+    background-color: var(--cor-botao);
+    color: white;
+    margin-top: 10px;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px var(--cor-sombra);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#register-equine-button:hover {
+    background-color: var(--cor-botao-hover);
+    transform: translateY(-2px); /* Efeito ao passar o mouse */
 }

@@ -72,6 +72,8 @@ function fetchUserProfileAndPets() {
                         <strong>Gênero:</strong> ${pet.genero} <br>
                         <strong>Peso:</strong> ${pet.peso} kg <br>
                         <strong>Nível de Atividade:</strong> ${pet.nivel_atv}
+                        <br><button class="delete-pet-button" data-pet-id="${petId}">Deletar</button>
+
                     `;
 
                     petsList.appendChild(petItem);
@@ -287,9 +289,72 @@ async function carregarImagemPerfil() {
     }
 }
 
+// Event listener para o botão de deletar com SweetAlert2 para confirmação e exclusão de pet
+document.addEventListener('click', async (event) => {
+    if (event.target.classList.contains('delete-pet-button')) {
+        const petId = event.target.getAttribute('data-pet-id');
+        const petItem = event.target.closest('.pet-item');
 
+        const confirmation = await Swal.fire({
+            title: 'Tem certeza?',
+            text: "Você realmente deseja deletar este pet?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ff4040',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Sim, deletar!',
+            cancelButtonText: 'Cancelar'
+        });
+        console.log("ID do pet para exclusão:", petId);
 
+        if (confirmation.isConfirmed) {
+            try {
+                const response = await fetch(`http://localhost:3000/api/pet/${12}/delete`, {
+                    method: 'DELETE'
+                });
+                const result = await response.json();
 
+                if (response.ok && result.success) {
+                    console.log("Resposta da API (exclusão do pet):", result); // Adicione este log
+                    Swal.fire('Deletado!', 'O pet foi removido.', 'success');
+                    petItem.remove(); // Remove o pet da interface imediatamente
+                } else {
+                    console.log("Erro da API (exclusão do pet):", result); // Adicione este log
+                    Swal.fire('Erro!', result.message || 'Erro ao deletar o pet.', 'error');
+                }
+                
+
+                if (response.ok && result.success) {
+                    Swal.fire('Deletado!', 'O pet foi removido.', 'success');
+                    petItem.remove(); // Remove o pet da interface imediatamente
+                } else {
+                    Swal.fire('Erro!', result.message || 'Erro ao deletar o pet.', 'error');
+                }
+            } catch (error) {
+                console.error('Erro ao deletar pet:', error);
+                Swal.fire('Erro!', 'Não foi possível deletar o pet.', 'error');
+                fetchUserProfileAndPets(); // Atualiza a lista de pets se houve erro
+            }
+        }
+    }
+});
+
+document.getElementById('register-equine-button').addEventListener('click', function() {
+    Swal.fire({
+        title: 'Tem certeza?',
+        text: "Você deseja criar um novo cadastro de equino?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sim, cadastrar!',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = '/front/cadastrarpet/index.html'; // Redireciona para a página de cadastro de pet
+        }
+    });
+});
 
 // Chama a função para buscar os dados do perfil e dos pets quando a página é carregada
 window.onload = function() {

@@ -305,42 +305,39 @@ async function updateUser(request, response) {
   });
 }
 
-// Função que remove usuário no banco
-async function deleteUser(request, response) {
-  // Preparar o comando de execução no banco
-  const query = "DELETE FROM users WHERE `id_user` = ?";
+// Função que remove pet no banco
+async function deletePet(request, response) {
+  const petId = request.params.idpet;  // Altere para `idpet` para coincidir com a rota
+  console.log("ID do pet recebido para exclusão:", petId); // Log para verificar o ID
 
-  // Recebimento de parametro da rota
-  const params = Array(request.params.id);
+  const query = "DELETE FROM pet WHERE `idpet` = ?";
+  const params = [petId];
 
-  // Executa a ação no banco e valida os retornos para o client que realizou a solicitação
   connection.query(query, params, (err, results) => {
-    try {
-      if (results) {
-        response.status(200).json({
-          success: true,
-          message: `Sucesso! Usuário deletado.`,
-          data: results,
-        });
-      } else {
-        response.status(400).json({
-          success: false,
-          message: `Não foi possível realizar a remoção. Verifique os dados informados`,
-          query: err.sql,
-          sqlMessage: err.sqlMessage,
-        });
+      if (err) {
+          console.error("Erro ao excluir o pet:", err);
+          return response.status(500).json({
+              success: false,
+              message: "Erro ao excluir o pet no banco de dados.",
+              error: err,
+          });
       }
-    } catch (e) {
-      // Caso aconteça algum erro na execução
-      response.status(400).json({
-        succes: false,
-        message: "Ocorreu um erro. Não foi possível deletar usuário!",
-        query: err.sql,
-        sqlMessage: err.sqlMessage,
-      });
-    }
+
+      if (results.affectedRows > 0) {
+          response.status(200).json({
+              success: true,
+              message: "Pet excluído com sucesso!",
+          });
+      } else {
+          response.status(400).json({
+              success: false,
+              message: "Pet não encontrado ou falha ao excluir.",
+          });
+      }
   });
 }
+
+
 
 // Função que busca todos os pets do usuário
 async function getPetsByUserId(request, response) {
@@ -560,7 +557,7 @@ module.exports = {
   deleteEventoCalendario,
   carregarEventos,
   updateUser,
-  deleteUser,
+  deletePet,
   getPetsByUserId,
   envioImgUsuario,
   buscarImagemPerfil,

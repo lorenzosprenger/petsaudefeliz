@@ -39,7 +39,6 @@
                             <button type="button" id="toggle-password">Mostrar</button>
                         </div>
                     </div>
-                    <!-- Novo campo para upload de imagem -->
                     <div class="form-group">
                         <label for="img_perfil">Imagem de Perfil:</label>
                         <input type="file" id="img_perfil" name="img_perfil" accept="image/*">
@@ -50,21 +49,27 @@
                 </form>
             </div>
 
-            <!-- Espaço para exibir os pets cadastrados -->
             <div class="pets-profile-container">
                 <h2>Meus Pets</h2>
                 <div class="pet-selector">
                     <select id="pet-select" class="pet-select">
                         <option value="">Selecione um pet</option>
-                        <!-- As opções serão preenchidas dinamicamente via JavaScript -->
                     </select>
                 </div>
                 <div id="pets-list">
                     <!-- Informações do pet selecionado serão exibidas aqui -->
                 </div>
+                 <!-- Botão para cadastrar novo equino fora do bloco Meus Pets -->
+            <div>
+                <button id="register-equine-button" class="register-button">Cadastrar Novo Equino</button>
             </div>
+            </div>
+
+           
         </div>
+        
     </main>
     <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 </html>
