@@ -31,7 +31,7 @@ async function carregarImagemPerfil() {
     }
 }
 
-
+// Função para buscar o plano alimentar
 document.addEventListener('DOMContentLoaded', async () => {
     const idPet = localStorage.getItem('idUsuario');
 

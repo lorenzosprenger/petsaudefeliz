@@ -32,7 +32,7 @@ async function carregarImagemPerfil() {
 }
 
 
-
+// Função para buscar o plano de exercicios fisicos
 document.addEventListener('DOMContentLoaded', async () => {
     const idPet = localStorage.getItem('idUsuario');
 

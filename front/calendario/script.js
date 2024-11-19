@@ -14,6 +14,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderizarCalendario() {
         const nomesMeses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
         const diasDaSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+        
+        // Calcula o número de dias no mês e o primeiro dia da semana
         const diasNoMes = new Date(anoAtual, mesAtual + 1, 0).getDate();
         const primeiroDiaDaSemana = new Date(anoAtual, mesAtual, 1).getDay();
 
@@ -29,11 +31,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 </thead>
                 <tbody>
                     <tr>`;
-        
+
+        // Adiciona células vazias antes do primeiro dia do mês
         for (let i = 0; i < primeiroDiaDaSemana; i++) {
             calendarioHTML += '<td></td>';
         }
-
+        // Preenche os dias do mês
         let contagemDias = 1;
         for (let i = primeiroDiaDaSemana; i < 7; i++) {
             calendarioHTML += `<td class="calendar-day" data-day="${contagemDias}">${contagemDias}</td>`;
@@ -41,6 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         calendarioHTML += '</tr>';
 
+        // Preenche os demais dias do mês
         while (contagemDias <= diasNoMes) {
             calendarioHTML += '<tr>';
             for (let i = 0; i < 7 && contagemDias <= diasNoMes; i++) {
@@ -57,8 +61,8 @@ document.addEventListener('DOMContentLoaded', () => {
         calendar.innerHTML = calendarioHTML;
 
         document.getElementById('prev').addEventListener('click', () => {
-            mesAtual--;
-            if (mesAtual < 0) {
+            mesAtual--;// Muda para o mês anterior
+            if (mesAtual < 0) { // Volta para o ano anterior se necessário
                 mesAtual = 11;
                 anoAtual--;
             }
@@ -67,8 +71,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         document.getElementById('next').addEventListener('click', () => {
-            mesAtual++;
-            if (mesAtual > 11) {
+            mesAtual++; // Muda para o próximo mês
+            if (mesAtual > 11) { // Avança para o próximo ano se necessário
                 mesAtual = 0;
                 anoAtual++;
             }
@@ -76,15 +80,17 @@ document.addEventListener('DOMContentLoaded', () => {
             carregarEventos(); // Recarrega os eventos para o mês atualizado
         });
 
+        // Adiciona um evento de seleção aos dias do calendário
         const diasCalendario = document.querySelectorAll('.calendar-day');
         diasCalendario.forEach(dia => {
             dia.addEventListener('click', () => {
-                diasCalendario.forEach(d => d.classList.remove('selected'));
-                dia.classList.add('selected');
+                diasCalendario.forEach(d => d.classList.remove('selected')); // Remove a seleção de outros dias
+                dia.classList.add('selected'); // Adiciona a seleção ao dia clicado
             });
         });
     }
 
+    // Evento para adicionar um novo evento    
     addEventButton.addEventListener('click', () => {
         const diaSelecionado = document.querySelector('.calendar-day.selected');
         if (diaSelecionado) {
@@ -92,11 +98,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const mesSelecionado = mesAtual + 1;
             const anoSelecionado = anoAtual;
             const dataSelecionada = `${anoSelecionado}-${mesSelecionado}-${diaSelecionadoValue}`;
-            const textoEvento = eventInput.value.trim();
-    
+            const textoEvento = eventInput.value.trim();// Obtém o texto do evento
+            
+            // Função para enviar o evento ao servidor
             async function enviarEvento(idUsuario, textoEvento, dataSelecionada) {
                 let data = { 
-                    usuario_id: idUsuario,  // Agora usamos o idUsuario correto do localStorage
+                    usuario_id: idUsuario,
                     texto_evento: textoEvento, 
                     data_evento: dataSelecionada 
                 };
@@ -165,7 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-
+    // Função para adicionar um evento à lista de eventos
     function adicionarEventoNaLista(textoEvento, dataEvento, idEvento) {
         const listItem = document.createElement('li');
         
