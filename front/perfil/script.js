@@ -309,7 +309,7 @@ document.addEventListener('click', async (event) => {
 
         if (confirmation.isConfirmed) {
             try {
-                const response = await fetch(`http://localhost:3000/api/pet/${12}/delete`, {
+                const response = await fetch(`http://localhost:3000/api/pet/${petId}/delete`, {
                     method: 'DELETE'
                 });
                 const result = await response.json();

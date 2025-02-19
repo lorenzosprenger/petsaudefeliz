@@ -29,14 +29,19 @@ main{
 }
 
 
-.red{
+#ferradura-esq {
     position: fixed;
-    width: 40em;
-    height: 40em;
-    right: 80%;
-    top: 20%;
-    border-radius: 100% ;
-    background-color: red;
+    top: 0;
+    left: 0;
+    margin: 10px;
+}
+
+#ferradura-dir {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    left: 83%;
+    margin: 10px;
 }
 
 .form{

@@ -82,6 +82,7 @@ butao.onclick = async function (e) {
     if (content.success) {
         localStorage.setItem("idPet", content.data.insertId);
         localStorage.setItem("raca", raca);
+        localStorage.setItem("nomePet", nome);
         Swal.fire({
             icon: "success",
             title: "Cadastro realizado com sucesso!",

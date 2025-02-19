@@ -35,15 +35,11 @@ body {
     height: 100vh; 
 }
 
-#red {
+#ferradura {
     position: fixed;
     justify-content: center;
-    width: 100em;
-    height: 100em;
-    left: 60%;
-    bottom: 40%;
-    border-radius: 100%;
-    background-color: red;
+    left: 80%;
+    bottom: 65%;
 }
 
 main {
