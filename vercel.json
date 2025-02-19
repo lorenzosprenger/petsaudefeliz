@@ -1,6 +1,54 @@
 {
     "routes": [
       {
+        "src": "/assets/(.*)",
+        "dest": "/front/assets/$1"
+      },
+      {
+        "src": "/cadastrar",
+        "dest": "/front/cadastrar/index.html"
+      },
+      {
+        "src": "/cadastrarpet",
+        "dest": "/front/cadastrarpet/index.html"
+      },
+      {
+        "src": "/calendario",
+        "dest": "/front/calendario/index.html"
+      },
+      {
+        "src": "/conteudoeducacional",
+        "dest": "/front/conteudoeducacional/index.html"
+      },
+      {
+        "src": "/criarperfil",
+        "dest": "/front/criarperfil/index.html"
+      },
+      {
+        "src": "/exerciciosfisicos",
+        "dest": "/front/exerciciosfisicos/index.html"
+      },
+      {
+        "src": "/login",
+        "dest": "/front/login/index.html"
+      },
+      {
+        "src": "/nutricao",
+        "dest": "/front/nutricao/index.html"
+      },
+      {
+        "src": "/perfil",
+        "dest": "/front/perfil/index.html"
+      },
+      {
+        "src": "/saibamais",
+        "dest": "/front/saibamais/index.html"
+      },
+      {
+        "src": "/selecionarPet",
+        "dest": "/front/selecionarPet/index.html"
+      },
+      {
         "src": "/.*",
         "dest": "/front/landing/index.html"
       }
